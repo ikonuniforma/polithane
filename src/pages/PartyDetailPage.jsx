@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar } from '../components/common/Avatar';
 import { Badge } from '../components/common/Badge';
-import { formatNumber, formatDate } from '../utils/formatters';
+import { formatNumber, formatPolitScore, formatDate } from '../utils/formatters';
 import { mockParties } from '../mock/parties';
 import { mockUsers } from '../mock/users';
 import { PostCard } from '../components/post/PostCard';
@@ -124,7 +124,7 @@ export const PartyDetailPage = () => {
                 <h3 className="font-semibold mt-2">{mp.full_name}</h3>
                 <p className="text-sm text-gray-500">{mp.city_code}</p>
                 <Badge variant="primary" size="small" className="mt-2">
-                  {formatNumber(mp.polit_score)} PP
+                  {formatPolitScore(mp.polit_score)}
                 </Badge>
               </div>
             ))}

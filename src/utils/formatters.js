@@ -10,6 +10,18 @@ export const formatNumber = (num) => {
   return num.toString();
 };
 
+// Polit Puan formatlama (K yerine P. kullanır)
+export const formatPolitScore = (num) => {
+  if (!num && num !== 0) return '0';
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'M';
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'P.';
+  }
+  return num.toString();
+};
+
 // Tarih formatlama
 export const formatDate = (date) => {
   if (!date) return '';

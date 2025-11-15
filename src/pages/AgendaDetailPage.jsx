@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { PostCard } from '../components/post/PostCard';
-import { formatNumber } from '../utils/formatters';
+import { formatNumber, formatPolitScore } from '../utils/formatters';
 import { mockAgendas } from '../mock/agendas';
 import { mockPosts } from '../mock/posts';
 
@@ -45,7 +45,7 @@ export const AgendaDetailPage = () => {
               <div className="text-sm text-gray-500">Paylaşım</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-primary-blue">{formatNumber(agenda.total_polit_score)}</div>
+              <div className="text-2xl font-bold text-primary-blue">{formatPolitScore(agenda.total_polit_score)}</div>
               <div className="text-sm text-gray-500">Toplam Polit Puan</div>
             </div>
             <div>

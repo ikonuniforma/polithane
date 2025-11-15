@@ -1,7 +1,7 @@
 import { Eye, Heart, MessageCircle, Share2, Video, Image as ImageIcon, Music, FileText } from 'lucide-react';
 import { Avatar } from '../common/Avatar';
 import { Badge } from '../common/Badge';
-import { formatNumber, formatTimeAgo, truncate, formatDuration } from '../../utils/formatters';
+import { formatNumber, formatPolitScore, formatTimeAgo, truncate, formatDuration } from '../../utils/formatters';
 import { useNavigate } from 'react-router-dom';
 import { CONTENT_TYPES } from '../../utils/constants';
 
@@ -59,7 +59,7 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
         {/* Polit Puan */}
         <div className="text-right ml-2">
           <div className="text-lg font-bold text-primary-blue">
-            {formatNumber(post.polit_score)}
+            {formatPolitScore(post.polit_score)}
           </div>
           <div className="text-xs text-gray-500">Polit Puan</div>
         </div>

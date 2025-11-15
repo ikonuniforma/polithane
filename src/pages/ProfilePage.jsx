@@ -4,7 +4,7 @@ import { Avatar } from '../components/common/Avatar';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { PostCard } from '../components/post/PostCard';
-import { formatNumber } from '../utils/formatters';
+import { formatNumber, formatPolitScore } from '../utils/formatters';
 import { mockUsers } from '../mock/users';
 import { mockPosts } from '../mock/posts';
 
@@ -60,7 +60,7 @@ export const ProfilePage = () => {
                   <div className="text-sm text-gray-500">Paylaşım</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-primary-blue">{formatNumber(user.polit_score)}</div>
+                  <div className="text-xl font-bold text-primary-blue">{formatPolitScore(user.polit_score)}</div>
                   <div className="text-sm text-gray-500">Polit Puan</div>
                 </div>
               </div>

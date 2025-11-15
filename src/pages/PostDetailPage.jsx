@@ -5,7 +5,7 @@ import { Avatar } from '../components/common/Avatar';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { Modal } from '../components/common/Modal';
-import { formatNumber, formatTimeAgo, formatDate, formatDuration } from '../utils/formatters';
+import { formatNumber, formatPolitScore, formatTimeAgo, formatDate, formatDuration } from '../utils/formatters';
 import { mockPosts } from '../mock/posts';
 import { mockComments, generateMockComments } from '../mock/comments';
 import ReactPlayer from 'react-player';
@@ -105,7 +105,7 @@ export const PostDetailPage = () => {
             <div className="mt-4 pt-4 border-t">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-3xl font-bold text-primary-blue">{formatNumber(post.polit_score)}</div>
+                  <div className="text-3xl font-bold text-primary-blue">{formatPolitScore(post.polit_score)}</div>
                   <div className="text-sm text-gray-500">Polit Puan</div>
                 </div>
                 <Button variant="outline" onClick={() => setShowScoreModal(true)}>
@@ -178,7 +178,7 @@ export const PostDetailPage = () => {
         <div className="space-y-4">
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="text-2xl font-bold text-primary-blue mb-2">
-              {formatNumber(post.polit_score)} Polit Puan
+              {formatPolitScore(post.polit_score)} Polit Puan
             </div>
             <p className="text-sm text-gray-600">
               Bu puan, paylaşımınıza yapılan etkileşimlerden hesaplanmıştır.

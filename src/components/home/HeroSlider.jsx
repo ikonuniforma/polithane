@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Avatar } from '../common/Avatar';
 import { Badge } from '../common/Badge';
-import { formatNumber } from '../../utils/formatters';
+import { formatNumber, formatPolitScore } from '../../utils/formatters';
 import { useNavigate } from 'react-router-dom';
 
 export const HeroSlider = ({ posts = [], autoplay = true, interval = 5000 }) => {
@@ -49,7 +49,7 @@ export const HeroSlider = ({ posts = [], autoplay = true, interval = 5000 }) => 
             </div>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold">{formatNumber(currentPost.polit_score)}</div>
+            <div className="text-2xl font-bold">{formatPolitScore(currentPost.polit_score)}</div>
             <div className="text-xs text-gray-300">Polit Puan</div>
           </div>
         </div>

@@ -184,7 +184,23 @@ export const generateMockPosts = (count = 90, users = mockUsers, parties = mockP
   
   for (let i = 11; i <= count; i++) {
     const contentType = contentTypes[Math.floor(Math.random() * contentTypes.length)];
-    const user = users[Math.floor(Math.random() * users.length)];
+    // Teşkilat üyelerini de dahil et
+    const availableUsers = users.filter(u => 
+      u.user_type === 'politician' && 
+      (u.politician_type === 'provincial_chair' ||
+       u.politician_type === 'district_chair' ||
+       u.politician_type === 'myk_member' ||
+       u.politician_type === 'vice_chair' ||
+       u.politician_type === 'other' ||
+       u.politician_type === 'mp' ||
+       u.politician_type === 'party_chair') ||
+      u.user_type === 'normal' ||
+      u.user_type === 'ex_politician' ||
+      u.user_type === 'media'
+    );
+    const user = availableUsers.length > 0 
+      ? availableUsers[Math.floor(Math.random() * availableUsers.length)]
+      : users[Math.floor(Math.random() * users.length)];
     const agenda = agendas[Math.floor(Math.random() * agendas.length)];
     const text = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
     
@@ -228,7 +244,17 @@ export const generateMockPosts = (count = 90, users = mockUsers, parties = mockP
 export const getCategoryPosts = (category, allPosts = generateMockPosts(200)) => {
   const categoryMap = {
     'mps': (p) => p.user?.user_type === 'politician' && p.user?.politician_type === 'mp',
-    'organization': (p) => p.user?.user_type === 'politician' && p.user?.politician_type !== 'mp' && p.user?.politician_type !== 'party_chair',
+    'organization': (p) => {
+      // Teşkilat: politician ama mp veya party_chair değil
+      return p.user?.user_type === 'politician' && 
+             p.user?.politician_type !== 'mp' && 
+             p.user?.politician_type !== 'party_chair' &&
+             (p.user?.politician_type === 'provincial_chair' ||
+              p.user?.politician_type === 'district_chair' ||
+              p.user?.politician_type === 'myk_member' ||
+              p.user?.politician_type === 'vice_chair' ||
+              p.user?.politician_type === 'other');
+    },
     'citizens': (p) => p.user?.user_type === 'normal',
     'experience': (p) => p.user?.user_type === 'ex_politician',
     'media': (p) => p.user?.user_type === 'media'
@@ -238,5 +264,57 @@ export const getCategoryPosts = (category, allPosts = generateMockPosts(200)) =>
   if (!filter) return [];
   
   const filtered = allPosts.filter(filter);
+  
+  // Eğer teşkilat için yeterli post yoksa, generateMockPosts'ta teşkilat üyeleri oluştur
+  if (category === 'organization' && filtered.length < 20) {
+    // Teşkilat üyeleri için ekstra postlar oluştur
+    const orgTypes = ['provincial_chair', 'district_chair', 'myk_member', 'vice_chair', 'other'];
+    const orgUsers = allPosts
+      .map(p => p.user)
+      .filter(u => u?.user_type === 'politician' && orgTypes.includes(u?.politician_type))
+      .filter((v, i, a) => a.findIndex(u => u.user_id === v.user_id) === i);
+    
+    // Eğer yeterli teşkilat üyesi yoksa, mock users'dan oluştur
+    const needed = 20 - filtered.length;
+    for (let i = 0; i < needed; i++) {
+      const orgType = orgTypes[Math.floor(Math.random() * orgTypes.length)];
+      const partyId = Math.floor(Math.random() * 6) + 1;
+      const newPost = {
+        post_id: 1000 + i,
+        user_id: 100 + i,
+        user: {
+          user_id: 100 + i,
+          username: `org_user_${i}`,
+          full_name: `Teşkilat Üyesi ${i + 1}`,
+          user_type: 'politician',
+          politician_type: orgType,
+          party_id: partyId,
+          verification_badge: true,
+          profile_image: `https://i.pravatar.cc/150?img=${100 + i}`
+        },
+        content_type: ['text', 'image', 'video'][Math.floor(Math.random() * 3)],
+        content_text: 'Teşkilat çalışmalarımız devam ediyor.',
+        agenda_tag: ['ekonomi', 'eğitim', 'sağlık'][Math.floor(Math.random() * 3)],
+        polit_score: Math.floor(Math.random() * 5000) + 500,
+        view_count: Math.floor(Math.random() * 10000) + 100,
+        like_count: Math.floor(Math.random() * 500) + 10,
+        dislike_count: Math.floor(Math.random() * 50) + 1,
+        comment_count: Math.floor(Math.random() * 100) + 5,
+        is_featured: false,
+        created_at: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString()
+      };
+      
+      if (newPost.content_type === 'image') {
+        newPost.media_url = `https://picsum.photos/800/600?random=${1000 + i}`;
+      } else if (newPost.content_type === 'video') {
+        newPost.media_url = `https://picsum.photos/800/600?random=${1000 + i}`;
+        newPost.thumbnail_url = `https://picsum.photos/800/600?random=${1000 + i}`;
+        newPost.media_duration = Math.floor(Math.random() * 300) + 60;
+      }
+      
+      filtered.push(newPost);
+    }
+  }
+  
   return filtered.slice(0, 20);
 };

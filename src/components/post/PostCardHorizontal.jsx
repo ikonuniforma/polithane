@@ -1,7 +1,7 @@
 import { Eye, Heart, MessageCircle, Share2, Video, Image as ImageIcon, Music, FileText } from 'lucide-react';
 import { Avatar } from '../common/Avatar';
 import { Badge } from '../common/Badge';
-import { formatNumber, formatTimeAgo, truncate, formatDuration } from '../../utils/formatters';
+import { formatNumber, formatPolitScore, formatTimeAgo, truncate, formatDuration } from '../../utils/formatters';
 import { useNavigate } from 'react-router-dom';
 import { CONTENT_TYPES } from '../../utils/constants';
 
@@ -34,8 +34,9 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
   
   return (
     <div 
-      className="card-hover p-4 flex-shrink-0 w-[calc(50%-16px)] sm:w-[calc(50%-16px)] md:w-[calc(33.333%-16px)] lg:w-[calc(20%-16px)] min-w-[280px] cursor-pointer"
+      className="card-hover p-4 flex-shrink-0 w-[calc(50%-16px)] sm:w-[calc(50%-16px)] md:w-[180px] lg:w-[175px] cursor-pointer"
       onClick={() => navigate(`/post/${post.post_id}`)}
+      style={{ minWidth: '150px', maxWidth: '200px' }}
     >
       {/* Üst Bilgi */}
       <div className="flex items-start justify-between mb-3">
@@ -144,7 +145,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
       {/* Polit Puan */}
       <div className="mb-2">
         <div className="text-lg font-bold text-primary-blue">
-          {formatNumber(post.polit_score)}
+          {formatPolitScore(post.polit_score)}
         </div>
         <div className="text-xs text-gray-500">Polit Puan</div>
       </div>

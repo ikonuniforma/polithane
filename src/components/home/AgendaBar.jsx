@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { formatNumber } from '../../utils/formatters';
+import { formatNumber, formatPolitScore } from '../../utils/formatters';
 
 export const AgendaBar = ({ agendas = [] }) => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export const AgendaBar = ({ agendas = [] }) => {
               {agenda.agenda_title}
             </span>
             <span className="text-xs bg-gray-100 hover:bg-white hover:text-primary-blue px-2 py-0.5 rounded-full font-semibold transition-colors">
-              {formatNumber(agenda.total_polit_score)}
+              {formatPolitScore(agenda.total_polit_score)}
             </span>
           </button>
         ))}
