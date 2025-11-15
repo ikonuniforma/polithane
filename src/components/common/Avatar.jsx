@@ -1,5 +1,6 @@
 import { Check } from 'lucide-react';
 import { clsx } from 'clsx';
+import { getPlaceholderImage } from '../../utils/imagePaths';
 
 export const Avatar = ({ 
   src, 
@@ -13,9 +14,11 @@ export const Avatar = ({
   const badgeSize = sizeNum * 0.3;
   
   const getAvatarUrl = (url) => {
-    if (url && !url.includes('placeholder') && !url.includes('pravatar')) return url;
+    // Eğer gerçek path varsa kullan
+    if (url && url.startsWith('/assets/')) return url;
+    // Placeholder kullan
     const userId = url?.match(/\d+/)?.[0] || Math.floor(Math.random() * 70) + 1;
-    return `https://i.pravatar.cc/150?img=${userId}`;
+    return getPlaceholderImage('avatar', userId);
   };
 
   return (
@@ -25,11 +28,11 @@ export const Avatar = ({
       onClick={onClick}
     >
       <img
-        src={getAvatarUrl(src) || 'https://i.pravatar.cc/150?img=1'}
+        src={getAvatarUrl(src) || getPlaceholderImage('avatar', 1)}
         alt={alt}
         className="w-full h-full rounded-full object-cover border-2 border-gray-200"
         onError={(e) => {
-          e.target.src = 'https://i.pravatar.cc/150?img=1';
+          e.target.src = getPlaceholderImage('avatar', 1);
         }}
       />
       {verified && (

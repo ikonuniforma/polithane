@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Avatar } from '../common/Avatar';
 import { Badge } from '../common/Badge';
 import { formatNumber, formatPolitScore } from '../../utils/formatters';
+import { getHeroImagePath, getPlaceholderImage } from '../../utils/imagePaths';
 import { useNavigate } from 'react-router-dom';
 
 export const HeroSlider = ({ posts = [], autoplay = true, interval = 5000 }) => {
@@ -28,11 +29,11 @@ export const HeroSlider = ({ posts = [], autoplay = true, interval = 5000 }) => 
       onClick={() => navigate(`/post/${currentPost.post_id}`)}
     >
       <img 
-        src={currentPost.media_url || currentPost.thumbnail_url || `https://picsum.photos/1200/300?random=${currentPost.post_id}`}
+        src={currentPost.media_url || currentPost.thumbnail_url || getHeroImagePath(currentIndex) || getPlaceholderImage('hero', currentPost.post_id)}
         alt=""
         className="w-full h-full object-cover"
         onError={(e) => {
-          e.target.src = `https://picsum.photos/1200/300?random=${currentPost.post_id}`;
+          e.target.src = getPlaceholderImage('hero', currentPost.post_id);
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />

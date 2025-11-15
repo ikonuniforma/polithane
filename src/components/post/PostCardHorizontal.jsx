@@ -2,6 +2,7 @@ import { Eye, Heart, MessageCircle, Share2, Video, Image as ImageIcon, Music, Fi
 import { Avatar } from '../common/Avatar';
 import { Badge } from '../common/Badge';
 import { formatNumber, formatPolitScore, formatTimeAgo, truncate, formatDuration } from '../../utils/formatters';
+import { getPlaceholderImage } from '../../utils/imagePaths';
 import { useNavigate } from 'react-router-dom';
 import { CONTENT_TYPES } from '../../utils/constants';
 
@@ -21,15 +22,19 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
     }
   };
 
-  // Placeholder resim URL'leri
+  // Resim URL helper
   const getImageUrl = (url) => {
-    if (url && !url.includes('placeholder')) return url;
-    return `https://picsum.photos/400/300?random=${post.post_id}`;
+    // Eğer gerçek path varsa kullan
+    if (url && url.startsWith('/assets/')) return url;
+    // Placeholder kullan
+    return getPlaceholderImage('post', post.post_id);
   };
 
   const getAvatarUrl = (url) => {
-    if (url && !url.includes('placeholder')) return url;
-    return `https://i.pravatar.cc/150?img=${post.user_id || 1}`;
+    // Eğer gerçek path varsa kullan
+    if (url && url.startsWith('/assets/')) return url;
+    // Placeholder kullan
+    return getPlaceholderImage('avatar', post.user_id || 1);
   };
   
   return (
@@ -86,7 +91,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
               alt=""
               className="w-full rounded-lg object-cover h-48"
               onError={(e) => {
-                e.target.src = `https://picsum.photos/400/300?random=${post.post_id}`;
+                e.target.src = getPlaceholderImage('post', post.post_id);
               }}
             />
             {post.content_text && (
@@ -101,7 +106,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
               alt=""
               className="w-full rounded-lg object-cover h-48"
               onError={(e) => {
-                e.target.src = `https://picsum.photos/400/300?random=${post.post_id}`;
+                e.target.src = getPlaceholderImage('post', post.post_id);
               }}
             />
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-lg">

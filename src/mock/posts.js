@@ -1,6 +1,7 @@
 // Mock post verileri
 import { mockUsers } from './users.js';
 import { mockParties } from './parties.js';
+import { getPostMediaPath, getHeroImagePath } from '../utils/imagePaths.js';
 
 export const mockPosts = [
   {
@@ -24,8 +25,8 @@ export const mockPosts = [
     user: mockUsers[1],
     content_type: 'video',
     content_text: 'Gençlerimizle buluşmamızdan kareler',
-    media_url: 'https://picsum.photos/800/600?random=2',
-    thumbnail_url: 'https://picsum.photos/800/600?random=2',
+    media_url: getPostMediaPath('video', 2, false),
+    thumbnail_url: getPostMediaPath('video', 2, true),
     media_duration: 180,
     agenda_tag: 'gençlik',
     polit_score: 42300,
@@ -42,7 +43,7 @@ export const mockPosts = [
     user: mockUsers[5],
     content_type: 'image',
     content_text: 'İstanbul\'da yaptığımız çalışma ziyaretinden görüntüler',
-    media_url: 'https://picsum.photos/800/600?random=3',
+    media_url: getPostMediaPath('image', 3),
     agenda_tag: 'yerel yönetim',
     polit_score: 3200,
     view_count: 15000,
@@ -224,13 +225,13 @@ export const generateMockPosts = (count = 90, users = mockUsers, parties = mockP
     };
     
     if (contentType === 'image') {
-      post.media_url = `https://picsum.photos/800/600?random=${i}`;
+      post.media_url = getPostMediaPath('image', i);
     } else if (contentType === 'video') {
-      post.media_url = `https://picsum.photos/800/600?random=${i}`;
-      post.thumbnail_url = `https://picsum.photos/800/600?random=${i}`;
+      post.media_url = getPostMediaPath('video', i, false);
+      post.thumbnail_url = getPostMediaPath('video', i, true);
       post.media_duration = Math.floor(Math.random() * 300) + 60;
     } else if (contentType === 'audio') {
-      post.media_url = `https://picsum.photos/400/400?random=${i}`;
+      post.media_url = getPostMediaPath('audio', i);
       post.media_duration = Math.floor(Math.random() * 600) + 120;
     }
     
@@ -305,10 +306,10 @@ export const getCategoryPosts = (category, allPosts = generateMockPosts(200)) =>
       };
       
       if (newPost.content_type === 'image') {
-        newPost.media_url = `https://picsum.photos/800/600?random=${1000 + i}`;
+        newPost.media_url = getPostMediaPath('image', 1000 + i);
       } else if (newPost.content_type === 'video') {
-        newPost.media_url = `https://picsum.photos/800/600?random=${1000 + i}`;
-        newPost.thumbnail_url = `https://picsum.photos/800/600?random=${1000 + i}`;
+        newPost.media_url = getPostMediaPath('video', 1000 + i, false);
+        newPost.thumbnail_url = getPostMediaPath('video', 1000 + i, true);
         newPost.media_duration = Math.floor(Math.random() * 300) + 60;
       }
       
