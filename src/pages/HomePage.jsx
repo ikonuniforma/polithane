@@ -16,33 +16,41 @@ export const HomePage = () => {
   
   useEffect(() => {
     // Mock data loading simulation
-    setTimeout(() => {
-      const allPosts = generateMockPosts(200);
-      setPosts(allPosts);
-      setParties(mockParties);
-      setAgendas(mockAgendas);
-    }, 100);
+    try {
+      setTimeout(() => {
+        const allPosts = generateMockPosts(200);
+        setPosts(allPosts);
+        setParties(mockParties);
+        setAgendas(mockAgendas);
+      }, 100);
+    } catch (error) {
+      console.error('Error loading mock data:', error);
+      // Fallback: en azından boş array'ler set et
+      setPosts([]);
+      setParties([]);
+      setAgendas([]);
+    }
   }, []);
   
   // Kategorilere göre post filtreleme - her kategori için 20 örnek
-  const mpPosts = getCategoryPosts('mps', posts);
-  const organizationPosts = getCategoryPosts('organization', posts);
-  const citizenPosts = getCategoryPosts('citizens', posts);
-  const exPoliticianPosts = getCategoryPosts('experience', posts);
-  const mediaPosts = getCategoryPosts('media', posts);
-  const featuredPosts = posts.filter(p => p.is_featured).slice(0, 5);
+  const mpPosts = posts.length > 0 ? getCategoryPosts('mps', posts) : [];
+  const organizationPosts = posts.length > 0 ? getCategoryPosts('organization', posts) : [];
+  const citizenPosts = posts.length > 0 ? getCategoryPosts('citizens', posts) : [];
+  const exPoliticianPosts = posts.length > 0 ? getCategoryPosts('experience', posts) : [];
+  const mediaPosts = posts.length > 0 ? getCategoryPosts('media', posts) : [];
+  const featuredPosts = posts.length > 0 ? posts.filter(p => p.is_featured).slice(0, 5) : [];
   
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container-main py-6 lg:pr-0">
         {/* Manşet Slayt */}
-        <HeroSlider posts={featuredPosts} />
+        {featuredPosts.length > 0 && <HeroSlider posts={featuredPosts} />}
         
         {/* Parti Bayrakları */}
-        <ParliamentBar parties={parties} totalSeats={600} />
+        {parties.length > 0 && <ParliamentBar parties={parties} totalSeats={600} />}
         
         {/* Gündem Bar */}
-        <AgendaBar agendas={agendas} />
+        {agendas.length > 0 && <AgendaBar agendas={agendas} />}
         
         {/* Ana İçerik Alanı */}
         <div className="grid grid-cols-1 lg:grid-cols-[800px_175px] gap-8 lg:pr-0">

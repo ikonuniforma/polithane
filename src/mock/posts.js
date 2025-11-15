@@ -253,7 +253,11 @@ export const generateMockPosts = (count = 90, users = mockUsers, parties = mockP
 };
 
 // Her kategori için 20 örnek post oluştur
-export const getCategoryPosts = (category, allPosts = generateMockPosts(200)) => {
+export const getCategoryPosts = (category, allPosts = []) => {
+  // Eğer allPosts boşsa, generateMockPosts çağır
+  if (!allPosts || allPosts.length === 0) {
+    allPosts = generateMockPosts(200);
+  }
   const categoryMap = {
     'mps': (p) => p.user?.user_type === 'politician' && p.user?.politician_type === 'mp',
     'organization': (p) => {
