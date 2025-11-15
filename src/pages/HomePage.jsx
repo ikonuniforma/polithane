@@ -34,7 +34,7 @@ export const HomePage = () => {
   
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container-main py-6">
+      <div className="container-main py-6 lg:pr-0">
         {/* Manşet Slayt */}
         <HeroSlider posts={featuredPosts} />
         
