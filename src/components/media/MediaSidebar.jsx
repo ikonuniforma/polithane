@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import { PostCard } from '../post/PostCard';
+import { PostCardHorizontal } from '../post/PostCardHorizontal';
 
 export const MediaSidebar = ({ posts = [] }) => {
   const scrollRef = useRef(null);
@@ -37,7 +37,7 @@ export const MediaSidebar = ({ posts = [] }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       {canScrollUp && (
         <button
           onClick={() => scroll('up')}
@@ -50,18 +50,17 @@ export const MediaSidebar = ({ posts = [] }) => {
       
       <div
         ref={scrollRef}
-        className="space-y-4 overflow-y-auto max-h-[800px] scrollbar-hide pr-2"
+        className="space-y-4 overflow-y-auto max-h-[800px] scrollbar-hide"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
         }}
       >
         {mediaPosts.map(post => (
-          <div key={post.post_id} className="w-full">
-            <PostCard 
-              post={post}
-            />
-          </div>
+          <PostCardHorizontal 
+            key={post.post_id} 
+            post={post}
+          />
         ))}
       </div>
 
