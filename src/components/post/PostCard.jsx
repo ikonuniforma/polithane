@@ -23,7 +23,7 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
   
   return (
     <div 
-      className="card-hover p-4 mb-4"
+      className="card-hover p-4 mb-4 w-full"
       onClick={() => navigate(`/post/${post.post_id}`)}
     >
       {/* Üst Bilgi */}

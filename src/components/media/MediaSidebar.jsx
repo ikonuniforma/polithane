@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { PostCard } from '../post/PostCard';
-import { mockPosts } from '../../mock/posts';
 
 export const MediaSidebar = ({ posts = [] }) => {
   const scrollRef = useRef(null);
   const [canScrollUp, setCanScrollUp] = useState(false);
   const [canScrollDown, setCanScrollDown] = useState(true);
   const mediaPosts = posts.filter(p => p.user?.user_type === 'media').slice(0, 10);
+  
+  // PostCard yerine PostCardHorizontal kullanarak genişliği eşitle
 
   useEffect(() => {
     const checkScroll = () => {
@@ -56,10 +57,11 @@ export const MediaSidebar = ({ posts = [] }) => {
         }}
       >
         {mediaPosts.map(post => (
-          <PostCard 
-            key={post.post_id} 
-            post={post}
-          />
+          <div key={post.post_id} className="w-full">
+            <PostCard 
+              post={post}
+            />
+          </div>
         ))}
       </div>
 
