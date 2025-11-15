@@ -90,7 +90,7 @@ export const SearchPage = () => {
               <div className="space-y-3">
                 {filteredAgendas.map(agenda => (
                   <div key={agenda.agenda_id} className="card">
-                    <h3 className="font-semibold text-lg">#{agenda.agenda_title}</h3>
+                    <h3 className="font-semibold text-lg">{agenda.agenda_title}</h3>
                     <div className="flex gap-4 mt-2 text-sm text-gray-500">
                       <span>{agenda.post_count} paylaşım</span>
                       <span>{agenda.total_polit_score} polit puan</span>
