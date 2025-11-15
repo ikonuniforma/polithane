@@ -8,6 +8,7 @@ import { MediaSidebar } from '../components/media/MediaSidebar';
 import { mockPosts, generateMockPosts, getCategoryPosts } from '../mock/posts';
 import { mockParties } from '../mock/parties';
 import { mockAgendas } from '../mock/agendas';
+import { mockUsers } from '../mock/users';
 
 export const HomePage = () => {
   const [posts, setPosts] = useState([]);
@@ -18,7 +19,7 @@ export const HomePage = () => {
     // Mock data loading simulation
     try {
       setTimeout(() => {
-        const allPosts = generateMockPosts(200);
+        const allPosts = generateMockPosts(200, mockUsers, mockParties);
         setPosts(allPosts);
         setParties(mockParties);
         setAgendas(mockAgendas);
