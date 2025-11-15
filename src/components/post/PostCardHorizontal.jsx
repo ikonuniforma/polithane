@@ -34,7 +34,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
   
   return (
     <div 
-      className="card-hover p-4 flex-shrink-0 w-[calc(20%-16px)] lg:w-[calc(20%-16px)] md:w-[calc(33.333%-16px)] sm:w-[calc(50%-16px)] min-w-[280px] cursor-pointer"
+      className="card-hover p-4 flex-shrink-0 w-[calc(50%-16px)] sm:w-[calc(50%-16px)] md:w-[calc(33.333%-16px)] lg:w-[calc(20%-16px)] min-w-[280px] cursor-pointer"
       onClick={() => navigate(`/post/${post.post_id}`)}
     >
       {/* Üst Bilgi */}
