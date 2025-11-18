@@ -153,7 +153,9 @@ export const HomePage = () => {
           <aside className="hidden lg:block lg:mr-0 min-w-0">
             <div className="sticky top-20 bg-yellow-100/30 rounded-lg p-4">
               <h2 className="text-sm font-bold text-gray-900 mb-4 whitespace-nowrap">MEDYA KONUŞUYOR</h2>
-              <MediaSidebar posts={posts} />
+              <div className="bg-yellow-100/30 -mx-4 -mb-4 px-4 pb-4">
+                <MediaSidebar posts={posts} />
+              </div>
             </div>
           </aside>
         </div>
