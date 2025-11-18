@@ -1,19 +1,24 @@
 import { useNavigate } from 'react-router-dom';
 import { Tooltip } from '../common/Tooltip';
+import { getPartyFlagPath } from '../../utils/imagePaths';
 
 export const ParliamentBar = ({ parties = [], totalSeats = 600 }) => {
   const navigate = useNavigate();
   
   if (!parties || parties.length === 0) return null;
   
-  const sortedParties = [...parties].sort((a, b) => b.parliament_seats - a.parliament_seats);
+  // Sadece mecliste sandalyesi olan partileri filtrele ve sırala
+  const partiesWithSeats = parties
+    .filter(party => party.parliament_seats > 0)
+    .sort((a, b) => b.parliament_seats - a.parliament_seats);
   
   return (
     <div className="mb-4">
       <h3 className="text-sm font-semibold text-gray-700 mb-2">MECLİS DAĞILIMI</h3>
-      <div className="flex h-12 rounded-lg overflow-hidden border border-gray-300">
-        {sortedParties.map((party) => {
+      <div className="flex h-24 rounded-lg overflow-hidden border border-gray-300">
+        {partiesWithSeats.map((party) => {
           const widthPercentage = (party.parliament_seats / totalSeats) * 100;
+          const flagPath = party.party_flag || getPartyFlagPath(party.party_short_name, party.party_id);
           
           return (
             <Tooltip
@@ -22,15 +27,25 @@ export const ParliamentBar = ({ parties = [], totalSeats = 600 }) => {
               position="top"
             >
               <div
-                className="h-full cursor-pointer transition-all hover:opacity-80 flex items-center justify-center"
+                className="h-full cursor-pointer transition-all hover:opacity-90 flex items-center justify-center relative overflow-hidden"
                 style={{
                   width: `${widthPercentage}%`,
                   backgroundColor: party.party_color || '#gray'
                 }}
                 onClick={() => navigate(`/party/${party.party_id}`)}
               >
-                {widthPercentage > 5 && (
-                  <span className="text-white text-xs font-semibold px-1 truncate">
+                {/* Parti Bayrağı - Arka plan olarak */}
+                <div 
+                  className="absolute inset-0 opacity-20 bg-cover bg-center bg-no-repeat"
+                  style={{
+                    backgroundImage: `url(${flagPath})`,
+                    backgroundSize: 'cover'
+                  }}
+                />
+                
+                {/* Parti Kısa Adı - Ön planda */}
+                {widthPercentage > 3 && (
+                  <span className="text-white text-xs font-bold px-1 truncate relative z-10 drop-shadow-lg">
                     {party.party_short_name}
                   </span>
                 )}
