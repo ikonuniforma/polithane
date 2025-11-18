@@ -36,7 +36,7 @@ const mpUsers = membersOfParliament.map((mp, index) => {
   const lastName = nameParts.slice(1).join(' ');
   const username = `${firstName.toLowerCase()}_${lastName.toLowerCase().replace(/\s+/g, '_')}`;
   const partyId = partyNameToId[mp.party] || null;
-  const cityCode = cityNameToCode[mp.city] || null;
+  const cityCode = cityNameToCode[mp.city.toUpperCase()] || null;
   
   return {
     user_id: userId,

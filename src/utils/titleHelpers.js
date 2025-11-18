@@ -10,7 +10,7 @@ export const getPoliticianTitle = (politicianType, cityCode = null, districtName
   const titles = {
     'mp': 'Milletvekili',
     'party_chair': 'Genel Başkan',
-    'provincial_chair': cityCode ? `${cityCode} İl Başkanı` : 'İl Başkanı',
+    'provincial_chair': 'İl Başkanı', // cityCode ÖNünde değil, sadece badge'de
     'district_chair': 'İlçe Başkanı',
     'metropolitan_mayor': 'Büyükşehir Belediye Başkanı',
     'district_mayor': districtName ? `${districtName} Belediye Başkanı` : 'İlçe Belediye Başkanı',

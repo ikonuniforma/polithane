@@ -169,7 +169,9 @@ export const HomePage = () => {
                     <h2 className="text-xl font-bold text-gray-900">HİT GÜNDEMLER</h2>
                     <span className="text-sm text-gray-500 font-medium">Tüm Kategorilerden</span>
                   </div>
-                  <span className="text-sm text-gray-500">Her Kategoriden Karışık</span>
+                  <a href="/category/all" className="text-primary-blue hover:underline text-sm">
+                    Tümünü Gör
+                  </a>
                 </div>
                 <HorizontalScroll 
                   autoScroll={true} 

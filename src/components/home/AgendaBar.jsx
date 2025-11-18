@@ -21,17 +21,17 @@ export const AgendaBar = ({ agendas = [] }) => {
   const secondRow = trendingAgendas.slice(5, 10);
   
   const AgendaButton = ({ agenda, index }) => {
-    // İlk 3 gündem için ateş ikonu - FARKLI HIZ ANİMASYONLARI
+    // İlk 3 gündem için ateş ikonu - FARKLI HIZ ANİMASYONLARI (Flash efekti)
     let fireIcon = null;
     if (index === 0) {
-      // 1. en sıcak - büyük ateş - ÇOK HIZLI yanıp sönme (0.5s)
-      fireIcon = <Flame className="w-5 h-5 text-red-500" fill="currentColor" style={{animation: 'pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite'}} />;
+      // 1. en sıcak - büyük ateş - ÇOK HIZLI yanıp sönme (0.3s - çok hızlı flash)
+      fireIcon = <Flame className="w-5 h-5 text-red-600" fill="currentColor" style={{animation: 'pulse 0.3s cubic-bezier(0.4, 0, 0.6, 1) infinite'}} />;
     } else if (index === 1) {
-      // 2. orta sıcak - orta ateş - ORTA HIZLI (1s)
-      fireIcon = <Flame className="w-[17px] h-[17px] text-red-500" fill="currentColor" style={{animation: 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite'}} />;
+      // 2. orta sıcak - orta ateş - ORTA HIZLI (0.6s - orta hız flash)
+      fireIcon = <Flame className="w-[17px] h-[17px] text-orange-500" fill="currentColor" style={{animation: 'pulse 0.6s cubic-bezier(0.4, 0, 0.6, 1) infinite'}} />;
     } else if (index === 2) {
-      // 3. hafif sıcak - küçük ateş - YAVAŞ (1.5s)
-      fireIcon = <Flame className="w-3.5 h-3.5 text-yellow-500" fill="currentColor" style={{animation: 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite'}} />;
+      // 3. hafif sıcak - küçük ateş - YAVAŞ (1s - yavaş flash)
+      fireIcon = <Flame className="w-3.5 h-3.5 text-yellow-500" fill="currentColor" style={{animation: 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite'}} />;
     }
     
     return (
@@ -86,10 +86,14 @@ export const AgendaBar = ({ agendas = [] }) => {
               className="flex-shrink-0 px-3 py-1.5 bg-white border-2 border-primary-blue text-primary-blue rounded-full text-xs font-semibold shadow-sm whitespace-nowrap flex items-center gap-1"
             >
               <Flame 
-                className={index === 0 ? "w-3 h-3" : index === 1 ? "w-2.5 h-2.5" : "w-2 h-2"} 
+                className={
+                  index === 0 ? "w-3 h-3 text-red-600" : 
+                  index === 1 ? "w-2.5 h-2.5 text-orange-500" : 
+                  "w-2 h-2 text-yellow-500"
+                } 
                 fill="currentColor"
                 style={{
-                  animation: `pulse ${index === 0 ? '0.5s' : index === 1 ? '1s' : '1.5s'} cubic-bezier(0.4, 0, 0.6, 1) infinite`
+                  animation: `pulse ${index === 0 ? '0.3s' : index === 1 ? '0.6s' : '1s'} cubic-bezier(0.4, 0, 0.6, 1) infinite`
                 }}
               />
               {agenda.agenda_title}
