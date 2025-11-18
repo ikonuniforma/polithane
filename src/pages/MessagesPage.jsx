@@ -1,17 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Avatar } from '../components/common/Avatar';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 import { formatTimeAgo } from '../utils/formatters';
 import { mockUsers } from '../mock/users';
+import { MESSAGING_LIMITS } from '../utils/constants';
 
 export const MessagesPage = () => {
   const [selectedConv, setSelectedConv] = useState(null);
+  const [isLimitReached, setIsLimitReached] = useState(false);
+  const [messageCount, setMessageCount] = useState(0);
   const [conversations] = useState([
     { id: 1, user: mockUsers[4], lastMessage: 'Merhaba, nasılsın?', unread: 2, time: '2025-11-15T10:00:00Z' },
     { id: 2, user: mockUsers[5], lastMessage: 'Teşekkürler', unread: 0, time: '2025-11-14T15:30:00Z' },
   ]);
+
+  // Mesajlaşma limitini kontrol et
+  useEffect(() => {
+    const checkMessagingLimit = async () => {
+      try {
+        // API'den günlük mesaj sayısını al (şimdilik localStorage'dan kontrol ediyoruz)
+        const storedMessageCount = localStorage.getItem('dailyMessageCount');
+        const lastResetDate = localStorage.getItem('lastMessageResetDate');
+        const today = new Date().toDateString();
+        
+        let currentCount = 0;
+        if (storedMessageCount && lastResetDate === today) {
+          currentCount = parseInt(storedMessageCount, 10);
+        } else {
+          // Yeni gün, sayacı sıfırla
+          localStorage.setItem('lastMessageResetDate', today);
+          localStorage.setItem('dailyMessageCount', '0');
+        }
+        
+        setMessageCount(currentCount);
+        
+        // Limit kontrolü
+        if (currentCount >= MESSAGING_LIMITS.DAILY_MESSAGE_LIMIT) {
+          setIsLimitReached(true);
+        } else {
+          setIsLimitReached(false);
+        }
+      } catch (error) {
+        console.error('Mesajlaşma limiti kontrol edilirken hata:', error);
+      }
+    };
+
+    checkMessagingLimit();
+  }, []);
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -76,9 +113,25 @@ export const MessagesPage = () => {
                   </div>
                 </div>
                 <div className="p-4 border-t">
+                  {isLimitReached ? (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-2">
+                      <p className="text-sm text-yellow-800">
+                        ⚠️ Günlük mesajlaşma limitinize ulaştınız ({MESSAGING_LIMITS.DAILY_MESSAGE_LIMIT} mesaj). 
+                        Yeni mesaj göndermek için yarın tekrar deneyin.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="text-xs text-gray-500 mb-2">
+                      Kalan mesaj hakkı: {MESSAGING_LIMITS.DAILY_MESSAGE_LIMIT - messageCount} / {MESSAGING_LIMITS.DAILY_MESSAGE_LIMIT}
+                    </div>
+                  )}
                   <div className="flex gap-2">
-                    <Input placeholder="Mesajınızı yazın..." className="flex-1" />
-                    <Button>Gönder</Button>
+                    <Input 
+                      placeholder="Mesajınızı yazın..." 
+                      className="flex-1" 
+                      disabled={isLimitReached}
+                    />
+                    <Button disabled={isLimitReached}>Gönder</Button>
                   </div>
                 </div>
               </>

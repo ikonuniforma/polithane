@@ -36,6 +36,13 @@ export const MEDIA_LIMITS = {
   TEXT_MAX_LENGTH: 5000
 };
 
+// Mesajlaşma limitleri
+export const MESSAGING_LIMITS = {
+  DAILY_MESSAGE_LIMIT: 100, // Günlük mesaj limiti
+  CONVERSATION_LIMIT: 50, // Maksimum konuşma sayısı
+  MESSAGE_LENGTH_MAX: 5000 // Maksimum mesaj uzunluğu
+};
+
 // İzin verilen dosya tipleri
 export const ALLOWED_FILE_TYPES = {
   IMAGE: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'],
