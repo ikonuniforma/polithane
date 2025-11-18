@@ -6,7 +6,7 @@ import { getPlaceholderImage } from '../../utils/imagePaths';
 import { useNavigate } from 'react-router-dom';
 import { CONTENT_TYPES } from '../../utils/constants';
 
-export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = false }) => {
+export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = false, fullWidth = false }) => {
   const navigate = useNavigate();
   
   const getContentIcon = () => {
@@ -39,9 +39,9 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
   
   return (
     <div 
-      className="card-hover p-4 flex-shrink-0 w-[calc(50%-16px)] sm:w-[calc(50%-16px)] md:w-[180px] lg:w-[175px] cursor-pointer"
+      className={`card-hover ${fullWidth ? 'p-3 w-full flex-shrink' : 'p-4 flex-shrink-0 w-[calc(50%-16px)] sm:w-[calc(50%-16px)] md:w-[180px] lg:w-[175px]'} cursor-pointer`}
       onClick={() => navigate(`/post/${post.post_id}`)}
-      style={{ minWidth: '150px', maxWidth: '200px' }}
+      style={fullWidth ? {} : { minWidth: '150px', maxWidth: '200px' }}
     >
       {/* Üst Bilgi */}
       <div className="flex items-start justify-between mb-3">
@@ -89,7 +89,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
             <img 
               src={getImageUrl(post.media_url)} 
               alt=""
-              className="w-full rounded-lg object-cover h-48"
+              className={`w-full rounded-lg object-cover ${fullWidth ? 'h-36' : 'h-48'}`}
               onError={(e) => {
                 e.target.src = getPlaceholderImage('post', post.post_id);
               }}
@@ -104,7 +104,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
             <img 
               src={getImageUrl(post.thumbnail_url || post.media_url)} 
               alt=""
-              className="w-full rounded-lg object-cover h-48"
+              className={`w-full rounded-lg object-cover ${fullWidth ? 'h-36' : 'h-48'}`}
               onError={(e) => {
                 e.target.src = getPlaceholderImage('post', post.post_id);
               }}

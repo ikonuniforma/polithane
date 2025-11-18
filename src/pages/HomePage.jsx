@@ -54,11 +54,11 @@ export const HomePage = () => {
         {agendas.length > 0 && <AgendaBar agendas={agendas} />}
         
         {/* Ana İçerik Alanı */}
-        <div className="grid grid-cols-1 lg:grid-cols-[800px_175px] gap-8 lg:pr-0">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-4 lg:pr-0">
           {/* Sol Ana Kolon */}
-          <div className="space-y-8">
+          <div className="space-y-8 min-w-0">
             {/* VEKİLLER KONUŞUYOR */}
-            <section>
+            <section className="min-w-0">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900">VEKİLLER KONUŞUYOR</h2>
                 <a href="/category/mps" className="text-primary-blue hover:underline text-sm">
@@ -82,7 +82,7 @@ export const HomePage = () => {
             </section>
             
             {/* TEŞKİLAT KONUŞUYOR */}
-            <section>
+            <section className="min-w-0">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900">TEŞKİLAT KONUŞUYOR</h2>
                 <a href="/category/organization" className="text-primary-blue hover:underline text-sm">
@@ -105,7 +105,7 @@ export const HomePage = () => {
             </section>
             
             {/* VATANDAŞ KONUŞUYOR */}
-            <section>
+            <section className="min-w-0">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900">VATANDAŞ KONUŞUYOR</h2>
                 <a href="/category/citizens" className="text-primary-blue hover:underline text-sm">
@@ -127,7 +127,7 @@ export const HomePage = () => {
             </section>
             
             {/* DENEYİM KONUŞUYOR */}
-            <section>
+            <section className="min-w-0">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900">DENEYİM KONUŞUYOR</h2>
                 <a href="/category/experience" className="text-primary-blue hover:underline text-sm">
@@ -150,7 +150,7 @@ export const HomePage = () => {
           </div>
           
           {/* Sağ Medya Sidebar */}
-          <aside className="hidden lg:block lg:mr-0">
+          <aside className="hidden lg:block lg:mr-0 min-w-0">
             <div className="sticky top-20">
               <h2 className="text-lg font-bold text-gray-900 mb-4">MEDYA KONUŞUYOR</h2>
               <MediaSidebar posts={posts} />
