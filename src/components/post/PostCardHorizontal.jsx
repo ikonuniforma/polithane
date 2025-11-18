@@ -50,6 +50,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
             src={getAvatarUrl(post.user?.profile_image)} 
             size="32px" 
             verified={post.user?.verification_badge}
+            partyLogo={post.user?.party_id ? post.user?.party?.party_logo : null}
           />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1">
@@ -57,11 +58,9 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
                 {post.user?.full_name}
               </span>
               {showPartyLogo && post.user?.party_id && (
-                <img 
-                  src={post.user?.party?.party_logo || `https://via.placeholder.com/16x16/${post.user?.party?.party_color?.replace('#', '') || '009fd6'}/ffffff?text=${post.user?.party?.party_short_name || 'P'}`} 
-                  alt=""
-                  className="w-4 h-4 flex-shrink-0"
-                />
+                <span className="text-xs text-gray-600">
+                  {post.user?.party?.party_short_name}
+                </span>
               )}
             </div>
             <div className="flex items-center gap-2 text-xs text-gray-500">

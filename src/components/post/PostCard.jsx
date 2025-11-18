@@ -33,6 +33,7 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
             src={post.user?.profile_image} 
             size="40px" 
             verified={post.user?.verification_badge}
+            partyLogo={post.user?.party_id ? post.user?.party?.party_logo : null}
           />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
@@ -40,11 +41,9 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
                 {post.user?.full_name}
               </span>
               {showPartyLogo && post.user?.party_id && (
-                <img 
-                  src={post.user?.party?.party_logo} 
-                  alt=""
-                  className="w-4 h-4"
-                />
+                <span className="text-xs text-gray-600">
+                  {post.user?.party?.party_short_name}
+                </span>
               )}
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-500">

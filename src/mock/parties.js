@@ -197,5 +197,19 @@ export const mockParties = [
     mp_count: 1,
     organization_count: 25,
     member_count: 40000
+  },
+  {
+    party_id: 15,
+    party_name: 'Bağımsız Milletvekilleri',
+    party_short_name: 'BAĞIMSIZ',
+    party_logo: getPartyLogoPath('BAĞIMSIZ', 15),
+    party_flag: getPartyFlagPath('BAĞIMSIZ', 15),
+    parliament_seats: 3,
+    foundation_date: null,
+    party_color: '#808080',
+    is_active: true,
+    mp_count: 3,
+    organization_count: 0,
+    member_count: 0
   }
 ];

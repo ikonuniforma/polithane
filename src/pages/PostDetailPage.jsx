@@ -41,9 +41,19 @@ export const PostDetailPage = () => {
           {/* Kullanıcı Bilgisi */}
           <div className="card mb-6">
             <div className="flex items-center gap-4 mb-4">
-              <Avatar src={post.user?.profile_image} size="60px" verified={post.user?.verification_badge} />
+              <Avatar 
+                src={post.user?.profile_image} 
+                size="60px" 
+                verified={post.user?.verification_badge}
+                partyLogo={post.user?.party_id ? post.user?.party?.party_logo : null}
+              />
               <div className="flex-1">
-                <h3 className="font-bold text-lg">{post.user?.full_name}</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-bold text-lg">{post.user?.full_name}</h3>
+                  {post.user?.party_id && post.user?.party?.party_short_name && (
+                    <Badge variant="secondary" size="small">{post.user.party.party_short_name}</Badge>
+                  )}
+                </div>
                 <p className="text-sm text-gray-500">{formatDate(post.created_at)}</p>
               </div>
               <Button variant="outline" onClick={() => navigate(`/profile/${post.user_id}`)}>

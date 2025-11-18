@@ -36,11 +36,19 @@ export const ProfilePage = () => {
         <div className="container-main py-8">
           {/* Profil Header */}
           <div className="flex items-start gap-6">
-            <Avatar src={user.profile_image} size="120px" verified={user.verification_badge} />
+            <Avatar 
+              src={user.profile_image} 
+              size="120px" 
+              verified={user.verification_badge}
+              partyLogo={user.party_id ? user.party?.party_logo : null}
+            />
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <h1 className="text-3xl font-bold">{user.full_name}</h1>
                 {user.verification_badge && <Badge variant="primary">Doğrulanmış</Badge>}
+                {user.party_id && user.party?.party_short_name && (
+                  <Badge variant="secondary">{user.party.party_short_name}</Badge>
+                )}
               </div>
               <p className="text-gray-600 mb-2">@{user.username}</p>
               {user.bio && <p className="text-gray-800 mb-4">{user.bio}</p>}
