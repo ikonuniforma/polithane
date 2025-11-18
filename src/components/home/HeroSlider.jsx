@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FileText, Image as ImageIcon, Video, Music } from 'lucide-react';
+import { Avatar } from '../common/Avatar';
 import { formatPolitScore } from '../../utils/formatters';
 import { useNavigate } from 'react-router-dom';
 import { CONTENT_TYPES } from '../../utils/constants';
@@ -64,13 +65,19 @@ export const HeroSlider = ({ posts = [], autoplay = true, interval = 5000 }) => 
       <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
       
       <div className="relative h-full flex items-center justify-between px-4 md:px-6">
-        {/* Sol: Gündem Başlığı */}
-        <div className="flex-1 pr-4">
-          <div className="text-white">
-            <h2 className="text-lg md:text-2xl lg:text-3xl font-bold mb-1 line-clamp-2 drop-shadow-lg">
+        {/* Sol: Profil Resmi + Gündem Başlığı */}
+        <div className="flex items-center gap-3 flex-1 pr-4">
+          <Avatar 
+            src={currentPost.user?.profile_image} 
+            size="48px" 
+            verified={currentPost.user?.verification_badge}
+            className="border-2 border-white/30 flex-shrink-0"
+          />
+          <div className="flex-1 min-w-0">
+            <h2 className="text-base md:text-xl lg:text-2xl font-bold mb-0.5 line-clamp-2 drop-shadow-lg text-white">
               {currentPost.agenda_tag || 'Gündem'}
             </h2>
-            <p className="text-xs md:text-sm text-white/90 font-medium">
+            <p className="text-xs md:text-sm text-white/90 font-medium truncate">
               {currentPost.user?.full_name} • {formatPolitScore(currentPost.polit_score)} PP
             </p>
           </div>
