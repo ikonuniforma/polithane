@@ -21,6 +21,17 @@ export const HomePage = () => {
     try {
       setTimeout(() => {
         const allPosts = generateMockPosts(400, mockUsers, mockParties);
+        
+        // Debug: İlk 3 postu kontrol et
+        console.log('=== LOGO DEBUG ===');
+        console.log('İlk 3 post:', allPosts.slice(0, 3).map(p => ({
+          post_id: p.post_id,
+          user_name: p.user?.full_name,
+          party_id: p.user?.party_id,
+          party_short_name: p.user?.party?.party_short_name,
+          party_logo: p.user?.party?.party_logo
+        })));
+        
         setPosts(allPosts);
         setParties(mockParties);
         setAgendas(mockAgendas);
