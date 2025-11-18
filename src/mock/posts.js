@@ -3,11 +3,11 @@ import { mockUsers } from './users.js';
 import { mockParties } from './parties.js';
 import { getPostMediaPath, getHeroImagePath } from '../utils/imagePaths.js';
 
+// Mock posts - user referansları generateMockPosts içinde doldurulacak
 export const mockPosts = [
   {
     post_id: 1,
     user_id: 1,
-    user: mockUsers[0],
     content_type: 'text',
     content_text: 'Ekonomi konusunda yeni açıklamalarımızı yarın yapacağız. Halkımızın refahı için çalışmaya devam ediyoruz. Şeffaflık ve hesap verebilirlik ilkelerimizden taviz vermeden ilerliyoruz.',
     agenda_tag: 'Ekonomi paketi görüşmeleri',
@@ -22,7 +22,6 @@ export const mockPosts = [
   {
     post_id: 2,
     user_id: 2,
-    user: mockUsers[1],
     content_type: 'video',
     content_text: 'Gençlerimizle buluşmamızdan kareler',
     media_url: getPostMediaPath('video', 2, false),
@@ -39,8 +38,7 @@ export const mockPosts = [
   },
   {
     post_id: 3,
-    user_id: 6,
-    user: mockUsers[5],
+    user_id: Math.min(10, mockUsers.length),
     content_type: 'image',
     content_text: 'İstanbul\'da yaptığımız çalışma ziyaretinden görüntüler',
     media_url: getPostMediaPath('image', 3),
@@ -55,8 +53,7 @@ export const mockPosts = [
   },
   {
     post_id: 4,
-    user_id: 7,
-    user: mockUsers[6],
+    user_id: Math.min(15, mockUsers.length),
     content_type: 'text',
     content_text: 'Bugün Meclis\'te önemli bir oturum gerçekleşti. Ekonomi paketi görüşmeleri devam ediyor.',
     agenda_tag: 'Ekonomi paketi görüşmeleri',
@@ -70,8 +67,7 @@ export const mockPosts = [
   },
   {
     post_id: 5,
-    user_id: 5,
-    user: mockUsers[4],
+    user_id: mockUsers.length > 0 ? mockUsers[mockUsers.length - 1]?.user_id || 1 : 1,
     content_type: 'text',
     content_text: 'Vatandaş olarak görüşlerimi paylaşmak istiyorum. Ekonomi konusunda daha fazla şeffaflık bekliyoruz.',
     agenda_tag: 'Ekonomi paketi görüşmeleri',
@@ -85,8 +81,7 @@ export const mockPosts = [
   },
   {
     post_id: 6,
-    user_id: 3,
-    user: mockUsers[2],
+    user_id: Math.min(5, mockUsers.length),
     content_type: 'text',
     content_text: 'Milliyetçi Hareket Partisi olarak ülkemizin güvenliği ve refahı için çalışmaya devam ediyoruz.',
     agenda_tag: 'Belediyelere yapılan operasyonlar',
@@ -100,8 +95,7 @@ export const mockPosts = [
   },
   {
     post_id: 7,
-    user_id: 8,
-    user: mockUsers[7],
+    user_id: Math.min(20, mockUsers.length),
     content_type: 'image',
     content_text: 'Parti etkinliğimizden kareler',
     media_url: 'https://picsum.photos/800/600?random=7',
@@ -116,8 +110,7 @@ export const mockPosts = [
   },
   {
     post_id: 8,
-    user_id: 9,
-    user: mockUsers[8],
+    user_id: Math.min(25, mockUsers.length),
     content_type: 'text',
     content_text: 'Eski bir milletvekili olarak deneyimlerimi paylaşmak istiyorum. Siyaset dünyası hakkında düşüncelerim...',
     agenda_tag: 'Ekrem İmamoğlu iddanamesi',
@@ -131,8 +124,7 @@ export const mockPosts = [
   },
   {
     post_id: 9,
-    user_id: 4,
-    user: mockUsers[3],
+    user_id: Math.min(3, mockUsers.length),
     content_type: 'video',
     content_text: 'Genel Başkan olarak yaptığım açıklama',
     media_url: 'https://picsum.photos/800/600?random=9',
@@ -149,8 +141,7 @@ export const mockPosts = [
   },
   {
     post_id: 10,
-    user_id: 10,
-    user: mockUsers[9],
+    user_id: Math.min(30, mockUsers.length),
     content_type: 'text',
     content_text: 'Eğitim sistemimiz hakkında görüşlerim var. Çocuklarımızın geleceği için daha iyi bir eğitim sistemi gerekiyor.',
     agenda_tag: 'Eğitim sistemi reformu',
