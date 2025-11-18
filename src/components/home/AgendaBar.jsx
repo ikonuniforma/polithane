@@ -55,42 +55,62 @@ export const AgendaBar = ({ agendas = [] }) => {
   
   return (
     <div className="mb-4">
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold text-gray-700">GÜNDEM</h3>
-      </div>
-      
-      {/* MOBİL İÇİN: Yatay kaydırılabilir tek satır */}
-      <div className="md:hidden">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
-          {trendingAgendas.map((agenda, index) => (
-            <div key={agenda.agenda_id} className="snap-start flex-shrink-0 w-[85%]">
-              <AgendaButton agenda={agenda} index={index} />
-            </div>
+      {/* MOBİL İÇİN: Compact ve Sticky */}
+      <div className="md:hidden sticky top-0 z-20 bg-gray-50 pb-2 -mx-4 px-4">
+        <div className="flex items-center justify-between mb-2 pt-2">
+          <h3 className="text-sm font-bold text-gray-900">🔥 GÜNDEM</h3>
+          <button
+            onClick={() => navigate('/agendas')}
+            className="text-xs text-primary-blue font-semibold"
+          >
+            Tümü →
+          </button>
+        </div>
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+          {trendingAgendas.slice(0, 5).map((agenda, index) => (
+            <button
+              key={agenda.agenda_id}
+              onClick={() => navigate(`/agenda/${agenda.agenda_slug}`)}
+              className="snap-start flex-shrink-0 px-3 py-1.5 bg-white border-2 border-primary-blue text-primary-blue rounded-full text-xs font-semibold shadow-sm whitespace-nowrap flex items-center gap-1"
+            >
+              {index < 3 && (
+                <Flame 
+                  className={index === 0 ? "w-3 h-3" : index === 1 ? "w-2.5 h-2.5" : "w-2 h-2"} 
+                  fill="currentColor"
+                  style={{
+                    animation: `pulse ${index === 0 ? '0.5s' : index === 1 ? '1s' : '1.5s'} cubic-bezier(0.4, 0, 0.6, 1) infinite`
+                  }}
+                />
+              )}
+              {agenda.agenda_title}
+            </button>
           ))}
-          <div className="snap-start flex-shrink-0">
-            <AllAgendasButton />
-          </div>
         </div>
       </div>
       
       {/* DESKTOP İÇİN: 2 satır grid */}
-      <div className="hidden md:block space-y-2">
-        {/* İlk Satır - 5 gündem */}
-        <div className="flex gap-2 pb-2">
-          {firstRow.map((agenda, index) => (
-            <AgendaButton key={agenda.agenda_id} agenda={agenda} index={index} />
-          ))}
+      <div className="hidden md:block">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-semibold text-gray-700">GÜNDEM</h3>
         </div>
-        
-        {/* İkinci Satır - 5 gündem + TÜM GÜNDEME BAK butonu */}
-        {secondRow.length > 0 && (
+        <div className="space-y-2">
+          {/* İlk Satır - 5 gündem */}
           <div className="flex gap-2 pb-2">
-            {secondRow.map((agenda, index) => (
-              <AgendaButton key={agenda.agenda_id} agenda={agenda} index={index + 5} />
+            {firstRow.map((agenda, index) => (
+              <AgendaButton key={agenda.agenda_id} agenda={agenda} index={index} />
             ))}
-            <AllAgendasButton />
           </div>
-        )}
+          
+          {/* İkinci Satır - 5 gündem + TÜM GÜNDEME BAK butonu */}
+          {secondRow.length > 0 && (
+            <div className="flex gap-2 pb-2">
+              {secondRow.map((agenda, index) => (
+                <AgendaButton key={agenda.agenda_id} agenda={agenda} index={index + 5} />
+              ))}
+              <AllAgendasButton />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

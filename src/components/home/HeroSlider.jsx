@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Avatar } from '../common/Avatar';
-import { Badge } from '../common/Badge';
-import { formatNumber, formatPolitScore } from '../../utils/formatters';
-import { getHeroImagePath, getPlaceholderImage } from '../../utils/imagePaths';
+import { FileText, Image as ImageIcon, Video, Music } from 'lucide-react';
+import { formatPolitScore } from '../../utils/formatters';
 import { useNavigate } from 'react-router-dom';
+import { CONTENT_TYPES } from '../../utils/constants';
 
 export const HeroSlider = ({ posts = [], autoplay = true, interval = 5000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -23,36 +22,63 @@ export const HeroSlider = ({ posts = [], autoplay = true, interval = 5000 }) => 
   
   const currentPost = posts[currentIndex];
   
+  // Background rengi belirleme
+  const getBackgroundColor = () => {
+    if (currentPost.user?.party_id && currentPost.user?.party?.party_color) {
+      return currentPost.user.party.party_color;
+    }
+    
+    // Kullanıcı tipine göre renk
+    switch (currentPost.user?.user_type) {
+      case 'normal': return '#6B7280'; // Gri - Vatandaş
+      case 'ex_politician': return '#D97706'; // Amber - Deneyim
+      case 'media': return '#7C3AED'; // Mor - Medya
+      default: return '#009FD6'; // Mavi - Default
+    }
+  };
+  
+  // İçerik tipi ikonu
+  const getContentIcon = () => {
+    const iconClass = "w-16 h-16 md:w-20 md:h-20 text-white/90";
+    switch (currentPost.content_type) {
+      case CONTENT_TYPES.VIDEO:
+        return <Video className={iconClass} />;
+      case CONTENT_TYPES.IMAGE:
+        return <ImageIcon className={iconClass} />;
+      case CONTENT_TYPES.AUDIO:
+        return <Music className={iconClass} />;
+      default:
+        return <FileText className={iconClass} />;
+    }
+  };
+  
+  const bgColor = getBackgroundColor();
+  
   return (
     <div 
-      className="relative h-[120px] rounded-xl overflow-hidden cursor-pointer mb-4"
+      className="relative h-[100px] md:h-[120px] rounded-xl overflow-hidden cursor-pointer mb-4 shadow-lg"
+      style={{ backgroundColor: bgColor }}
       onClick={() => navigate(`/post/${currentPost.post_id}`)}
     >
-      <img 
-        src={currentPost.media_url || currentPost.thumbnail_url || getHeroImagePath(currentIndex) || getPlaceholderImage('hero', currentPost.post_id)}
-        alt=""
-        className="w-full h-full object-cover"
-        onError={(e) => {
-          e.target.src = getPlaceholderImage('hero', currentPost.post_id);
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
       
-      <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Avatar src={currentPost.user?.profile_image || `https://i.pravatar.cc/150?img=${currentPost.user_id || 1}`} size="32px" />
-            <div>
-              <div className="font-semibold text-sm">{currentPost.user?.full_name}</div>
-              <Badge variant="primary" size="small" className="mt-1">
-                {currentPost.agenda_tag}
-              </Badge>
-            </div>
+      <div className="relative h-full flex items-center justify-between px-4 md:px-6">
+        {/* Sol: Gündem Başlığı */}
+        <div className="flex-1 pr-4">
+          <div className="text-white">
+            <h2 className="text-lg md:text-2xl lg:text-3xl font-bold mb-1 line-clamp-2 drop-shadow-lg">
+              {currentPost.agenda_tag || 'Gündem'}
+            </h2>
+            <p className="text-xs md:text-sm text-white/90 font-medium">
+              {currentPost.user?.full_name} • {formatPolitScore(currentPost.polit_score)} PP
+            </p>
           </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold">{formatPolitScore(currentPost.polit_score)}</div>
-            <div className="text-xs text-gray-300">Polit Puan</div>
-          </div>
+        </div>
+        
+        {/* Sağ: İçerik Tipi İkonu */}
+        <div className="flex-shrink-0">
+          {getContentIcon()}
         </div>
       </div>
       
