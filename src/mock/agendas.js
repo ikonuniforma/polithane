@@ -91,5 +91,95 @@ export const mockAgendas = [
     post_count: 280,
     is_trending: true,
     participant_count: 720
+  },
+  {
+    agenda_id: 11,
+    agenda_title: 'Asgari ücret artışı tartışmaları',
+    agenda_slug: slugify('Asgari ücret artışı tartışmaları'),
+    total_polit_score: 87000,
+    post_count: 245,
+    is_trending: true,
+    participant_count: 650
+  },
+  {
+    agenda_id: 12,
+    agenda_title: 'Deprem vergisi kullanımı',
+    agenda_slug: slugify('Deprem vergisi kullanımı'),
+    total_polit_score: 76000,
+    post_count: 210,
+    is_trending: true,
+    participant_count: 580
+  },
+  {
+    agenda_id: 13,
+    agenda_title: 'Kamu personel alımları',
+    agenda_slug: slugify('Kamu personel alımları'),
+    total_polit_score: 68000,
+    post_count: 190,
+    is_trending: true,
+    participant_count: 520
+  },
+  {
+    agenda_id: 14,
+    agenda_title: 'Elektrik ve doğalgaz zamları',
+    agenda_slug: slugify('Elektrik ve doğalgaz zamları'),
+    total_polit_score: 61000,
+    post_count: 175,
+    is_trending: true,
+    participant_count: 480
+  },
+  {
+    agenda_id: 15,
+    agenda_title: 'Yargı reformu paketi',
+    agenda_slug: slugify('Yargı reformu paketi'),
+    total_polit_score: 54000,
+    post_count: 160,
+    is_trending: true,
+    participant_count: 440
+  },
+  {
+    agenda_id: 16,
+    agenda_title: 'Otoyol geçiş ücretleri',
+    agenda_slug: slugify('Otoyol geçiş ücretleri'),
+    total_polit_score: 48000,
+    post_count: 145,
+    is_trending: true,
+    participant_count: 390
+  },
+  {
+    agenda_id: 17,
+    agenda_title: 'Çevre ve iklim değişikliği',
+    agenda_slug: slugify('Çevre ve iklim değişikliği'),
+    total_polit_score: 42000,
+    post_count: 130,
+    is_trending: true,
+    participant_count: 350
+  },
+  {
+    agenda_id: 18,
+    agenda_title: 'Emeklilik yaşı düzenlemesi',
+    agenda_slug: slugify('Emeklilik yaşı düzenlemesi'),
+    total_polit_score: 38000,
+    post_count: 120,
+    is_trending: true,
+    participant_count: 320
+  },
+  {
+    agenda_id: 19,
+    agenda_title: 'Suriyeli göçmenler politikası',
+    agenda_slug: slugify('Suriyeli göçmenler politikası'),
+    total_polit_score: 35000,
+    post_count: 110,
+    is_trending: true,
+    participant_count: 290
+  },
+  {
+    agenda_id: 20,
+    agenda_title: 'Vergi sisteminde değişiklikler',
+    agenda_slug: slugify('Vergi sisteminde değişiklikler'),
+    total_polit_score: 31000,
+    post_count: 95,
+    is_trending: true,
+    participant_count: 260
   }
 ];
