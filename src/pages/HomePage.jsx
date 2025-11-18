@@ -33,13 +33,15 @@ export const HomePage = () => {
     }
   }, []);
   
-  // Kategorilere göre post filtreleme - her kategori için 30 örnek
+  // Kategorilere göre post filtreleme - her kategori için 30 örnek (POLİT PUANA GÖRE SIRALANMIŞ)
   const mpPosts = posts.length > 0 ? getCategoryPosts('mps', posts) : [];
   const organizationPosts = posts.length > 0 ? getCategoryPosts('organization', posts) : [];
   const citizenPosts = posts.length > 0 ? getCategoryPosts('citizens', posts) : [];
   const exPoliticianPosts = posts.length > 0 ? getCategoryPosts('experience', posts) : [];
   const mediaPosts = posts.length > 0 ? getCategoryPosts('media', posts) : [];
-  const featuredPosts = posts.length > 0 ? posts.filter(p => p.is_featured).slice(0, 5) : [];
+  const featuredPosts = posts.length > 0 
+    ? posts.filter(p => p.is_featured).sort((a, b) => (b.polit_score || 0) - (a.polit_score || 0)).slice(0, 5) 
+    : [];
   
   return (
     <div className="min-h-screen bg-gray-50">

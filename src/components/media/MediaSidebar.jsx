@@ -6,7 +6,11 @@ export const MediaSidebar = ({ posts = [] }) => {
   const scrollRef = useRef(null);
   const [canScrollUp, setCanScrollUp] = useState(false);
   const [canScrollDown, setCanScrollDown] = useState(true);
-  const mediaPosts = posts.filter(p => p.user?.user_type === 'media').slice(0, 30);
+  // POLİT PUANA GÖRE SIRALANMIŞ medya postları
+  const mediaPosts = posts
+    .filter(p => p.user?.user_type === 'media')
+    .sort((a, b) => (b.polit_score || 0) - (a.polit_score || 0))
+    .slice(0, 30);
   
   // PostCard yerine PostCardHorizontal kullanarak genişliği eşitle
 

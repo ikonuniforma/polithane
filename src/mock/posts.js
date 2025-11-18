@@ -233,6 +233,24 @@ export const generateMockPosts = (count = 90, users = mockUsers, parties = mockP
     const agenda = agendas[Math.floor(Math.random() * agendas.length)];
     const text = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
     
+    // Kullanıcı tipine göre Polit Puan aralığı belirleme
+    let politScoreRange = { min: 100, max: 5000 };
+    if (user.user_type === 'politician') {
+      if (user.politician_type === 'mp') {
+        politScoreRange = { min: 5000, max: 50000 }; // Milletvekilleri: 5K-50K
+      } else if (user.politician_type === 'party_chair') {
+        politScoreRange = { min: 30000, max: 100000 }; // Parti liderleri: 30K-100K
+      } else {
+        politScoreRange = { min: 2000, max: 15000 }; // Teşkilat: 2K-15K
+      }
+    } else if (user.user_type === 'ex_politician') {
+      politScoreRange = { min: 8000, max: 40000 }; // Eski siyasetçiler: 8K-40K
+    } else if (user.user_type === 'media') {
+      politScoreRange = { min: 5000, max: 25000 }; // Medya: 5K-25K
+    } else {
+      politScoreRange = { min: 100, max: 3000 }; // Vatandaşlar: 100-3K
+    }
+    
     const post = {
       post_id: i,
       user_id: user.user_id,
@@ -243,7 +261,7 @@ export const generateMockPosts = (count = 90, users = mockUsers, parties = mockP
       content_type: contentType,
       content_text: text,
       agenda_tag: agenda,
-      polit_score: Math.floor(Math.random() * 5000) + 100,
+      polit_score: Math.floor(Math.random() * (politScoreRange.max - politScoreRange.min)) + politScoreRange.min,
       view_count: Math.floor(Math.random() * 50000) + 100,
       like_count: Math.floor(Math.random() * 5000) + 10,
       dislike_count: Math.floor(Math.random() * 500) + 1,
@@ -269,7 +287,7 @@ export const generateMockPosts = (count = 90, users = mockUsers, parties = mockP
   return posts;
 };
 
-// Her kategori için 30 örnek post oluştur
+// Her kategori için 30 örnek post oluştur - POLİT PUANA GÖRE SIRALANMIŞ
 export const getCategoryPosts = (category, allPosts = []) => {
   // Eğer allPosts boşsa, generateMockPosts çağır
   if (!allPosts || allPosts.length === 0) {
@@ -296,7 +314,10 @@ export const getCategoryPosts = (category, allPosts = []) => {
   const filter = categoryMap[category];
   if (!filter) return [];
   
-  const filtered = allPosts.filter(filter);
+  // Filtreleme ve POLİT PUANA GÖRE SIRALAMA (Büyükten küçüğe)
+  const filtered = allPosts
+    .filter(filter)
+    .sort((a, b) => (b.polit_score || 0) - (a.polit_score || 0));
   
   // Eğer teşkilat için yeterli post yoksa, generateMockPosts'ta teşkilat üyeleri oluştur
   if (category === 'organization' && filtered.length < 30) {
@@ -347,7 +368,10 @@ export const getCategoryPosts = (category, allPosts = []) => {
       
       filtered.push(newPost);
     }
+    // Eklenen postlar dahil tekrar sıralama
+    filtered.sort((a, b) => (b.polit_score || 0) - (a.polit_score || 0));
   }
   
+  // İlk 30'u al ve POLİT PUANA GÖRE SIRALANMIŞ olarak döndür
   return filtered.slice(0, 30);
 };
