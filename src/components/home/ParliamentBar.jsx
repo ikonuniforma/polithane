@@ -27,28 +27,22 @@ export const ParliamentBar = ({ parties = [], totalSeats = 600 }) => {
               position="top"
             >
               <div
-                className="h-full cursor-pointer transition-all hover:opacity-90 flex items-center justify-center relative overflow-hidden"
+                className="h-full cursor-pointer transition-all hover:opacity-90 flex flex-col items-center justify-start relative overflow-hidden"
                 style={{
                   width: `${widthPercentage}%`,
-                  backgroundColor: party.party_color || '#gray'
+                  backgroundImage: `url(${flagPath})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
                 }}
                 onClick={() => navigate(`/party/${party.party_id}`)}
               >
-                {/* Parti Bayrağı - Arka plan olarak */}
-                <div 
-                  className="absolute inset-0 opacity-20 bg-cover bg-center bg-no-repeat"
-                  style={{
-                    backgroundImage: `url(${flagPath})`,
-                    backgroundSize: 'cover'
-                  }}
-                />
-                
-                {/* Parti Kısa Adı - Ön planda */}
-                {widthPercentage > 3 && (
-                  <span className="text-white text-xs font-bold px-1 truncate relative z-10 drop-shadow-lg">
+                {/* Parti İsmi - Üstte */}
+                <div className="w-full bg-black bg-opacity-50 px-2 py-1 flex items-center justify-center">
+                  <span className="text-white text-xs font-bold truncate text-center">
                     {party.party_short_name}
                   </span>
-                )}
+                </div>
               </div>
             </Tooltip>
           );
