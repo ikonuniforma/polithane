@@ -77,23 +77,21 @@ export const AgendaBar = ({ agendas = [] }) => {
           )}
         </div>
         
-        {/* Gündem Pills - Horizontal Scroll */}
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory mb-3">
-          {visibleAgendas.slice(0, Math.min(visibleCount, 5)).map((agenda, index) => (
+        {/* Gündem Pills - İlk 3 Gündem (Alt satıra kayabilir, kaydırma yok) */}
+        <div className="flex flex-wrap gap-2 mb-3">
+          {visibleAgendas.slice(0, Math.min(visibleCount, 3)).map((agenda, index) => (
             <button
               key={agenda.agenda_id}
               onClick={() => navigate(`/agenda/${agenda.agenda_slug}`)}
-              className="snap-start flex-shrink-0 px-3 py-1.5 bg-white border-2 border-primary-blue text-primary-blue rounded-full text-xs font-semibold shadow-sm whitespace-nowrap flex items-center gap-1"
+              className="flex-shrink-0 px-3 py-1.5 bg-white border-2 border-primary-blue text-primary-blue rounded-full text-xs font-semibold shadow-sm whitespace-nowrap flex items-center gap-1"
             >
-              {index < 3 && (
-                <Flame 
-                  className={index === 0 ? "w-3 h-3" : index === 1 ? "w-2.5 h-2.5" : "w-2 h-2"} 
-                  fill="currentColor"
-                  style={{
-                    animation: `pulse ${index === 0 ? '0.5s' : index === 1 ? '1s' : '1.5s'} cubic-bezier(0.4, 0, 0.6, 1) infinite`
-                  }}
-                />
-              )}
+              <Flame 
+                className={index === 0 ? "w-3 h-3" : index === 1 ? "w-2.5 h-2.5" : "w-2 h-2"} 
+                fill="currentColor"
+                style={{
+                  animation: `pulse ${index === 0 ? '0.5s' : index === 1 ? '1s' : '1.5s'} cubic-bezier(0.4, 0, 0.6, 1) infinite`
+                }}
+              />
               {agenda.agenda_title}
             </button>
           ))}

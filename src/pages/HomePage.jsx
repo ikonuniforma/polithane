@@ -56,10 +56,37 @@ export const HomePage = () => {
     ? posts.filter(p => p.is_featured).sort((a, b) => (b.polit_score || 0) - (a.polit_score || 0)).slice(0, 5) 
     : [];
   
-  // TÜM kategori - Her kategoriden en yüksek polit puanlı içerikler karışık
-  const allPosts = posts.length > 0 
-    ? [...posts].sort((a, b) => (b.polit_score || 0) - (a.polit_score || 0))
-    : [];
+  // TÜM kategori - Her kategoriden sırayla, round-robin tarzında
+  const allPosts = (() => {
+    if (posts.length === 0) return [];
+    
+    // Her kategoriden içerikleri al ve polit puana göre sırala
+    const mpsSorted = mpPosts.slice();
+    const orgSorted = organizationPosts.slice();
+    const citizenSorted = citizenPosts.slice();
+    const expSorted = exPoliticianPosts.slice();
+    const mediaSorted = mediaPosts.slice();
+    
+    const mixed = [];
+    const maxLength = Math.max(
+      mpsSorted.length,
+      orgSorted.length,
+      citizenSorted.length,
+      expSorted.length,
+      mediaSorted.length
+    );
+    
+    // Round-robin: Her kategoriden sırayla al
+    for (let i = 0; i < maxLength; i++) {
+      if (mpsSorted[i]) mixed.push(mpsSorted[i]);
+      if (orgSorted[i]) mixed.push(orgSorted[i]);
+      if (citizenSorted[i]) mixed.push(citizenSorted[i]);
+      if (expSorted[i]) mixed.push(expSorted[i]);
+      if (mediaSorted[i]) mixed.push(mediaSorted[i]);
+    }
+    
+    return mixed;
+  })();
   
   // Mobil için kategoriler - TÜM ilk sırada
   const categories = [
