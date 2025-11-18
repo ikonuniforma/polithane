@@ -1,11 +1,19 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Flame } from 'lucide-react';
 import { formatPolitScore } from '../../utils/formatters';
 
 export const AgendaBar = ({ agendas = [] }) => {
   const navigate = useNavigate();
+  const [visibleCount, setVisibleCount] = useState(3); // Başlangıçta 3 gündem
   
   if (!agendas || agendas.length === 0) return null;
+  
+  const showMore = () => {
+    setVisibleCount(prev => Math.min(prev + 10, agendas.length));
+  };
+  
+  const visibleAgendas = agendas.slice(0, visibleCount);
   
   // Birinci satır: 5 gündem, İkinci satır: 5 gündem + TÜM GÜNDEME BAK butonu
   const trendingAgendas = agendas.slice(0, 10); // 10 gündem
@@ -55,19 +63,23 @@ export const AgendaBar = ({ agendas = [] }) => {
   
   return (
     <div className="mb-4">
-      {/* MOBİL İÇİN: Compact ve Sticky */}
-      <div className="md:hidden sticky top-0 z-20 bg-gray-50 pb-2 -mx-4 px-4">
+      {/* MOBİL İÇİN: Compact ve Sticky - 3 gündem başlangıç */}
+      <div className="md:hidden sticky top-0 z-20 bg-gray-50 pb-3 -mx-4 px-4">
         <div className="flex items-center justify-between mb-2 pt-2">
           <h3 className="text-sm font-bold text-gray-900">🔥 GÜNDEM</h3>
-          <button
-            onClick={() => navigate('/agendas')}
-            className="text-xs text-primary-blue font-semibold"
-          >
-            Tümü →
-          </button>
+          {visibleCount < agendas.length && (
+            <button
+              onClick={showMore}
+              className="text-xs text-white bg-primary-blue hover:bg-[#0088bb] px-3 py-1 rounded-full font-bold transition-colors"
+            >
+              {visibleCount === 3 ? 'Tümünü Gör' : 'Devam Et'}
+            </button>
+          )}
         </div>
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
-          {trendingAgendas.slice(0, 5).map((agenda, index) => (
+        
+        {/* Gündem Pills - Horizontal Scroll */}
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory mb-3">
+          {visibleAgendas.slice(0, Math.min(visibleCount, 5)).map((agenda, index) => (
             <button
               key={agenda.agenda_id}
               onClick={() => navigate(`/agenda/${agenda.agenda_slug}`)}
@@ -86,6 +98,34 @@ export const AgendaBar = ({ agendas = [] }) => {
             </button>
           ))}
         </div>
+        
+        {/* Expanded Agendas - Grid Layout (eğer 3'ten fazla gösteriliyorsa) */}
+        {visibleCount > 3 && (
+          <div className="space-y-2">
+            {visibleAgendas.slice(3).map((agenda, index) => (
+              <button
+                key={agenda.agenda_id}
+                onClick={() => navigate(`/agenda/${agenda.agenda_slug}`)}
+                className="w-full flex items-center justify-between px-3 py-2.5 bg-white border border-gray-200 rounded-lg hover:border-primary-blue hover:bg-blue-50 transition-all"
+              >
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  {index + 3 < 3 && (
+                    <Flame 
+                      className="w-3 h-3 flex-shrink-0 text-yellow-500" 
+                      fill="currentColor"
+                    />
+                  )}
+                  <span className="text-sm font-medium text-gray-900 truncate">
+                    {agenda.agenda_title}
+                  </span>
+                </div>
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded-full font-semibold text-gray-700 flex-shrink-0 ml-2">
+                  {formatPolitScore(agenda.total_polit_score)}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       
       {/* DESKTOP İÇİN: 2 satır grid */}

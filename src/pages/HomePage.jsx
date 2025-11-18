@@ -15,7 +15,7 @@ export const HomePage = () => {
   const [posts, setPosts] = useState([]);
   const [parties, setParties] = useState([]);
   const [agendas, setAgendas] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('mps'); // Mobil için aktif kategori
+  const [activeCategory, setActiveCategory] = useState('all'); // Mobil için aktif kategori - Default 'Tüm'
   
   useEffect(() => {
     // Mock data loading simulation
@@ -56,8 +56,14 @@ export const HomePage = () => {
     ? posts.filter(p => p.is_featured).sort((a, b) => (b.polit_score || 0) - (a.polit_score || 0)).slice(0, 5) 
     : [];
   
-  // Mobil için kategoriler
+  // TÜM kategori - Her kategoriden en yüksek polit puanlı içerikler karışık
+  const allPosts = posts.length > 0 
+    ? [...posts].sort((a, b) => (b.polit_score || 0) - (a.polit_score || 0))
+    : [];
+  
+  // Mobil için kategoriler - TÜM ilk sırada
   const categories = [
+    { id: 'all', name: 'Tüm', posts: allPosts, color: 'rgba(0, 0, 0, 0.02)' },
     { id: 'mps', name: 'Vekiller', posts: mpPosts, color: 'rgba(0, 159, 214, 0.08)' },
     { id: 'organization', name: 'Teşkilat', posts: organizationPosts, color: 'rgba(135, 180, 51, 0.08)' },
     { id: 'citizens', name: 'Vatandaş', posts: citizenPosts, color: 'rgba(229, 229, 229, 0.5)' },
@@ -107,14 +113,16 @@ export const HomePage = () => {
               {activeTab && (
                 <section className="min-w-0 rounded-lg p-4" style={{ backgroundColor: activeTab.color }}>
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-gray-900">{activeTab.name.toUpperCase()} KONUŞUYOR</h2>
+                    <h2 className="text-xl font-bold text-gray-900">
+                      {activeTab.id === 'all' ? 'TÜM İÇERİKLER' : `${activeTab.name.toUpperCase()} KONUŞUYOR`}
+                    </h2>
                   </div>
                   <div className="space-y-4">
                     {activeTab.posts.slice(0, 10).map(post => (
                       <PostCardHorizontal 
                         key={post.post_id} 
                         post={post}
-                        showCity={activeTab.id === 'mps'}
+                        showCity={activeTab.id === 'mps' || activeTab.id === 'all'}
                         showPartyLogo={activeTab.id !== 'citizens'}
                         fullWidth={true}
                       />
