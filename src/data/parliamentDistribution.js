@@ -9,6 +9,7 @@ export const currentParliamentDistribution = [
   { name: 'Yeniden Refah Partisi', shortName: 'YRP', seats: 4, color: '#006400' },
   { name: 'Hür Dava Partisi', shortName: 'HÜRDAVA', seats: 4, color: '#800080' },
   { name: 'Türkiye İşçi Partisi', shortName: 'TİP', seats: 3, color: '#FF0000' },
+  { name: 'Bağımsız Milletvekilleri', shortName: 'BAĞIMSIZ', seats: 3, color: '#808080' },
   { name: 'Demokratik Bölgeler Partisi', shortName: 'DBP', seats: 2, color: '#4B0082' },
   { name: 'Emek Partisi', shortName: 'EMEP', seats: 2, color: '#FF4500' },
   { name: 'Saadet Partisi', shortName: 'SAADET', seats: 1, color: '#00CED1' },
