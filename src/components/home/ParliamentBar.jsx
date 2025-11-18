@@ -1,4 +1,3 @@
-import { Tooltip } from '../common/Tooltip';
 import { getPartyFlagPath } from '../../utils/imagePaths';
 
 export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
@@ -17,23 +16,21 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
           const flagPath = getPartyFlagPath(party.shortName, index + 1);
           
           return (
-            <Tooltip
+            <div
               key={`${party.shortName}-${index}`}
-              content={`${party.name} - ${party.seats} sandalye (${widthPercentage.toFixed(1)}%)`}
-              position="top"
+              className="h-full cursor-pointer transition-all hover:opacity-90 relative"
+              style={{
+                width: `${widthPercentage}%`,
+                backgroundColor: party.color,
+                backgroundImage: `url(${flagPath})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                minWidth: '20px', // Çok küçük partiler için minimum genişlik
+                flexShrink: 0
+              }}
+              title={`${party.name} - ${party.seats} sandalye (${widthPercentage.toFixed(1)}%)`}
             >
-              <div
-                className="h-full cursor-pointer transition-all hover:opacity-90 relative"
-                style={{
-                  width: `${widthPercentage}%`,
-                  backgroundColor: party.color,
-                  backgroundImage: `url(${flagPath})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  minWidth: '20px' // Çok küçük partiler için minimum genişlik
-                }}
-              >
                 {/* Parti kısa adı - sadece yeterince geniş alanlarda göster */}
                 {widthPercentage > 3 && (
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -47,8 +44,7 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
                     </span>
                   </div>
                 )}
-              </div>
-            </Tooltip>
+            </div>
           );
         })}
       </div>
