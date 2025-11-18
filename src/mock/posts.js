@@ -269,11 +269,11 @@ export const generateMockPosts = (count = 90, users = mockUsers, parties = mockP
   return posts;
 };
 
-// Her kategori için 20 örnek post oluştur
+// Her kategori için 30 örnek post oluştur
 export const getCategoryPosts = (category, allPosts = []) => {
   // Eğer allPosts boşsa, generateMockPosts çağır
   if (!allPosts || allPosts.length === 0) {
-    allPosts = generateMockPosts(200);
+    allPosts = generateMockPosts(400);
   }
   const categoryMap = {
     'mps': (p) => p.user?.user_type === 'politician' && p.user?.politician_type === 'mp',
@@ -299,7 +299,7 @@ export const getCategoryPosts = (category, allPosts = []) => {
   const filtered = allPosts.filter(filter);
   
   // Eğer teşkilat için yeterli post yoksa, generateMockPosts'ta teşkilat üyeleri oluştur
-  if (category === 'organization' && filtered.length < 20) {
+  if (category === 'organization' && filtered.length < 30) {
     // Teşkilat üyeleri için ekstra postlar oluştur
     const orgTypes = ['provincial_chair', 'district_chair', 'myk_member', 'vice_chair', 'other'];
     const orgUsers = allPosts
@@ -308,7 +308,7 @@ export const getCategoryPosts = (category, allPosts = []) => {
       .filter((v, i, a) => a.findIndex(u => u.user_id === v.user_id) === i);
     
     // Eğer yeterli teşkilat üyesi yoksa, mock users'dan oluştur
-    const needed = 20 - filtered.length;
+    const needed = 30 - filtered.length;
     for (let i = 0; i < needed; i++) {
       const orgType = orgTypes[Math.floor(Math.random() * orgTypes.length)];
       const partyId = Math.floor(Math.random() * 6) + 1;
@@ -349,5 +349,5 @@ export const getCategoryPosts = (category, allPosts = []) => {
     }
   }
   
-  return filtered.slice(0, 20);
+  return filtered.slice(0, 30);
 };

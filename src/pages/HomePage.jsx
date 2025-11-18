@@ -19,7 +19,7 @@ export const HomePage = () => {
     // Mock data loading simulation
     try {
       setTimeout(() => {
-        const allPosts = generateMockPosts(200, mockUsers, mockParties);
+        const allPosts = generateMockPosts(400, mockUsers, mockParties);
         setPosts(allPosts);
         setParties(mockParties);
         setAgendas(mockAgendas);
@@ -33,7 +33,7 @@ export const HomePage = () => {
     }
   }, []);
   
-  // Kategorilere göre post filtreleme - her kategori için 20 örnek
+  // Kategorilere göre post filtreleme - her kategori için 30 örnek
   const mpPosts = posts.length > 0 ? getCategoryPosts('mps', posts) : [];
   const organizationPosts = posts.length > 0 ? getCategoryPosts('organization', posts) : [];
   const citizenPosts = posts.length > 0 ? getCategoryPosts('citizens', posts) : [];

@@ -58,76 +58,190 @@ const mpUsers = membersOfParliament.map((mp, index) => {
   };
 });
 
-// Medya kullanıcıları
-const mediaUsers = [
-  {
-    user_id: mpUsers.length + 1,
-    username: 'ayse_medya',
-    email: 'ayse@haberturk.com',
-    full_name: 'Ayşe Demir',
-    profile_image: getProfileImagePath('media', null, 'ayse_medya', mpUsers.length + 1),
-    bio: 'Gazeteci - Habertürk',
-    user_type: 'media',
-    verification_badge: true,
-    polit_score: 8900,
-    follower_count: 35000,
-    following_count: 500,
-    post_count: 180,
-    created_at: '2023-03-10T00:00:00Z'
-  },
-  {
-    user_id: mpUsers.length + 2,
-    username: 'mehmet_gazeteci',
-    email: 'mehmet@hurriyet.com.tr',
-    full_name: 'Mehmet Yılmaz',
-    profile_image: getProfileImagePath('media', null, 'mehmet_gazeteci', mpUsers.length + 2),
-    bio: 'Gazeteci - Hürriyet',
-    user_type: 'media',
-    verification_badge: true,
-    polit_score: 12000,
-    follower_count: 45000,
-    following_count: 600,
-    post_count: 250,
-    created_at: '2023-05-15T00:00:00Z'
-  }
+// Medya kullanıcıları - 40 farklı medya kuruluşu
+const mediaOutlets = [
+  { name: 'Habertürk', domain: 'haberturk.com' },
+  { name: 'Hürriyet', domain: 'hurriyet.com.tr' },
+  { name: 'CNN Türk', domain: 'cnnturk.com' },
+  { name: 'NTV', domain: 'ntv.com.tr' },
+  { name: 'TRT Haber', domain: 'trthaber.com' },
+  { name: 'Sözcü', domain: 'sozcu.com.tr' },
+  { name: 'Cumhuriyet', domain: 'cumhuriyet.com.tr' },
+  { name: 'Milliyet', domain: 'milliyet.com.tr' },
+  { name: 'Sabah', domain: 'sabah.com.tr' },
+  { name: 'Yeni Şafak', domain: 'yenisafak.com' },
+  { name: 'Akit', domain: 'yeniakit.com.tr' },
+  { name: 'Star', domain: 'star.com.tr' },
+  { name: 'Takvim', domain: 'takvim.com.tr' },
+  { name: 'Posta', domain: 'posta.com.tr' },
+  { name: 'Vatan', domain: 'gazetevatan.com' },
+  { name: 'Karar', domain: 'gazetekarar.com' },
+  { name: 'BirGün', domain: 'birgun.net' },
+  { name: 'Evrensel', domain: 'evrensel.net' },
+  { name: 'Anadolu Ajansı', domain: 'aa.com.tr' },
+  { name: 'DHA', domain: 'dha.com.tr' },
+  { name: 'İHA', domain: 'iha.com.tr' },
+  { name: 'BBC Türkçe', domain: 'bbc.com/turkce' },
+  { name: 'Euronews Türkçe', domain: 'euronews.com/tr' },
+  { name: 'DW Türkçe', domain: 'dw.com/tr' },
+  { name: 'Bloomberg HT', domain: 'bloomberght.com' },
+  { name: 'Ekonomim', domain: 'ekonomim.com' },
+  { name: 'Para', domain: 'para.com.tr' },
+  { name: 'Dünya', domain: 'dunya.com' },
+  { name: 'Haber7', domain: 'haber7.com' },
+  { name: 'Mynet', domain: 'mynet.com' },
+  { name: 'Ensonhaber', domain: 'ensonhaber.com' },
+  { name: 'Haber Global', domain: 'haberglobal.com.tr' },
+  { name: 'A Haber', domain: 'ahaber.com.tr' },
+  { name: 'Show Haber', domain: 'showhaber.com' },
+  { name: 'Kanal D', domain: 'kanald.com.tr' },
+  { name: 'Fox Haber', domain: 'fox.com.tr' },
+  { name: 'TV100', domain: 'tv100.com' },
+  { name: 'TGRT Haber', domain: 'tgrthaber.com.tr' },
+  { name: 'Ulusal Kanal', domain: 'ulusal.com.tr' },
+  { name: 'Halk TV', domain: 'halktv.com.tr' }
 ];
 
-// Normal vatandaş kullanıcıları
-const normalUsers = [
-  {
-    user_id: mpUsers.length + mediaUsers.length + 1,
-    username: 'ali_vatandas',
-    email: 'ali@example.com',
-    full_name: 'Ali Vatandaş',
-    profile_image: getProfileImagePath('normal', null, 'ali_vatandas', mpUsers.length + mediaUsers.length + 1),
-    bio: 'Vatandaş',
-    user_type: 'normal',
-    verification_badge: false,
-    polit_score: 450,
-    follower_count: 120,
-    following_count: 85,
-    post_count: 23,
-    created_at: '2024-01-15T00:00:00Z'
-  },
-  {
-    user_id: mpUsers.length + mediaUsers.length + 2,
-    username: 'fatma_citizen',
-    email: 'fatma@example.com',
-    full_name: 'Fatma Şahin',
-    profile_image: getProfileImagePath('normal', null, 'fatma_citizen', mpUsers.length + mediaUsers.length + 2),
-    bio: 'Vatandaş',
-    user_type: 'normal',
-    verification_badge: false,
-    polit_score: 320,
-    follower_count: 85,
-    following_count: 120,
-    post_count: 12,
-    created_at: '2024-05-10T00:00:00Z'
-  }
+const journalistNames = [
+  'Ayşe Demir', 'Mehmet Yılmaz', 'Fatma Kaya', 'Ahmet Özdemir', 'Zeynep Arslan',
+  'Can Şahin', 'Elif Çelik', 'Mustafa Aydın', 'Selin Yıldız', 'Burak Kurt',
+  'Deniz Öztürk', 'Ece Aksoy', 'Emre Koç', 'Gizem Uzun', 'Hakan Doğan',
+  'İrem Polat', 'Kerem Bulut', 'Lale Taş', 'Mert Kılıç', 'Naz Erdem',
+  'Onur Yavuz', 'Pelin Caner', 'Rıza Tekin', 'Simge Ateş', 'Tolga Bayrak',
+  'Ufuk Karaca', 'Vildan Şen', 'Yasemin Duran', 'Zafer Güven', 'Aslı Toprak',
+  'Berk Soylu', 'Ceren Akın', 'Doruk Eren', 'Ebru Kara', 'Furkan Şimşek',
+  'Gül Mutlu', 'Hande Aksoy', 'İlker Yaman', 'Jale Sezer', 'Kaan Özkan'
 ];
+
+const mediaUsers = mediaOutlets.map((outlet, index) => ({
+  user_id: mpUsers.length + index + 1,
+  username: `${journalistNames[index].split(' ')[0].toLowerCase()}_${outlet.domain.split('.')[0]}`,
+  email: `${journalistNames[index].split(' ')[0].toLowerCase()}@${outlet.domain}`,
+  full_name: journalistNames[index],
+  profile_image: getProfileImagePath('media', null, `${journalistNames[index].split(' ')[0].toLowerCase()}_medya`, mpUsers.length + index + 1),
+  bio: `Gazeteci - ${outlet.name}`,
+  user_type: 'media',
+  verification_badge: true,
+  polit_score: Math.floor(Math.random() * 20000) + 5000,
+  follower_count: Math.floor(Math.random() * 80000) + 20000,
+  following_count: Math.floor(Math.random() * 1000) + 300,
+  post_count: Math.floor(Math.random() * 400) + 100,
+  created_at: new Date(Date.now() - Math.random() * 730 * 24 * 60 * 60 * 1000).toISOString()
+}));
+
+// Teşkilat kullanıcıları - 40 kişi (il/ilçe başkanları, MYK üyeleri, vb.)
+const organizationTypes = ['provincial_chair', 'district_chair', 'myk_member', 'vice_chair', 'other'];
+const organizationTitles = {
+  'provincial_chair': 'İl Başkanı',
+  'district_chair': 'İlçe Başkanı',
+  'myk_member': 'MYK Üyesi',
+  'vice_chair': 'Genel Başkan Yardımcısı',
+  'other': 'Parti Yöneticisi'
+};
+
+const organizationNames = [
+  'Hasan Öztürk', 'Merve Kılıç', 'Barış Yıldırım', 'Seda Acar', 'Cem Koçak',
+  'Aylin Erdoğan', 'Serkan Turan', 'Gökçe Demirtaş', 'Okan Şentürk', 'Nihan Aksoy',
+  'Erdem Çetin', 'Didem Karaca', 'Kürşat Yavuz', 'Elif Özcan', 'Taner Bozkurt',
+  'Pınar Güneş', 'Volkan Kılıçarslan', 'Esra Çakır', 'Murat Sevinç', 'Sevgi Aydoğdu',
+  'Alper Bayram', 'Neslihan Koç', 'Selim Tan', 'Burcu Özer', 'İbrahim Sönmez',
+  'Özge Türker', 'Hüseyin Aydın', 'Nilüfer Arslan', 'Ramazan Kurt', 'Serap Yılmaz',
+  'Ömer Kaya', 'Yeşim Çelik', 'Tahir Şahin', 'Gülşah Doğan', 'Recep Özdemir',
+  'Sibel Yıldız', 'Kadir Aksoy', 'Tuğba Ergin', 'Mehmet Ali Tekin', 'Zehra Bulut'
+];
+
+const organizationUsers = organizationNames.map((name, index) => {
+  const userId = mpUsers.length + mediaUsers.length + index + 1;
+  const orgType = organizationTypes[index % organizationTypes.length];
+  const partyId = (index % 7) + 1; // 7 ana parti arasında dağıt
+  const firstName = name.split(' ')[0];
+  const lastName = name.split(' ').slice(1).join(' ');
+  const username = `${firstName.toLowerCase()}_${lastName.toLowerCase().replace(/\s+/g, '_')}_org`;
+  
+  return {
+    user_id: userId,
+    username: username,
+    email: `${username}@parti.org.tr`,
+    full_name: name,
+    profile_image: getProfileImagePath('politician', orgType, username, userId),
+    bio: organizationTitles[orgType],
+    user_type: 'politician',
+    politician_type: orgType,
+    party_id: partyId,
+    verification_badge: true,
+    polit_score: Math.floor(Math.random() * 10000) + 2000,
+    follower_count: Math.floor(Math.random() * 30000) + 5000,
+    following_count: Math.floor(Math.random() * 500) + 100,
+    post_count: Math.floor(Math.random() * 300) + 50,
+    created_at: new Date(Date.now() - Math.random() * 730 * 24 * 60 * 60 * 1000).toISOString()
+  };
+});
+
+// Eski siyasetçiler - 40 kişi
+const exPoliticianNames = [
+  'Bülent Arınç', 'İsmail Cem', 'Deniz Baykal', 'Süleyman Demirel', 'Mesut Yılmaz',
+  'Tansu Çiller', 'Necmettin Erbakan', 'Devlet Bahçeli (Eski)', 'Meral Akşener (Eski)', 'Ali Babacan (Eski)',
+  'Kemal Derviş', 'Abdüllatif Şener', 'İsmail Kahraman', 'Cemil Çiçek', 'Önder Sav',
+  'Hikmet Çetin', 'Mehmet Ali Şahin', 'Koksal Toptan', 'Mehmet Ağar', 'Yaşar Okuyan',
+  'Ertuğrul Günay', 'İdris Naim Şahin', 'Hüseyin Çelik', 'Ömer Çelik (Eski)', 'Egemen Bağış',
+  'Zafer Çağlayan', 'Nihat Ergün', 'Hayati Yazıcı', 'Faruk Çelik', 'Beşir Atalay',
+  'Vecdi Gönül', 'Mehmet Şimşek (Eski)', 'Lütfi Elvan', 'Fikri Işık', 'İsmet Yılmaz',
+  'Nabi Avcı', 'Veysi Kaynak', 'Süleyman Soylu (Eski)', 'Kemal Kılıçdaroğlu (Eski)', 'Ekmeleddin İhsanoğlu'
+];
+
+const exPoliticianUsers = exPoliticianNames.map((name, index) => {
+  const userId = mpUsers.length + mediaUsers.length + organizationUsers.length + index + 1;
+  const firstName = name.split(' ')[0];
+  const lastName = name.split(' ').slice(1).join(' ').replace(/\(Eski\)/g, '').trim();
+  const username = `${firstName.toLowerCase()}_${lastName.toLowerCase().replace(/\s+/g, '_')}_ex`;
+  
+  return {
+    user_id: userId,
+    username: username,
+    email: `${username}@example.com`,
+    full_name: name.replace(' (Eski)', ''),
+    profile_image: getProfileImagePath('ex_politician', null, username, userId),
+    bio: 'Eski Milletvekili',
+    user_type: 'ex_politician',
+    verification_badge: true,
+    polit_score: Math.floor(Math.random() * 25000) + 8000,
+    follower_count: Math.floor(Math.random() * 150000) + 50000,
+    following_count: Math.floor(Math.random() * 800) + 200,
+    post_count: Math.floor(Math.random() * 500) + 100,
+    created_at: new Date(Date.now() - Math.random() * 1095 * 24 * 60 * 60 * 1000).toISOString()
+  };
+});
+
+// Normal vatandaş kullanıcıları - 50 kişi
+const citizenFirstNames = ['Ali', 'Mehmet', 'Ayşe', 'Fatma', 'Ahmet', 'Zeynep', 'Mustafa', 'Elif', 'Can', 'Selin'];
+const citizenLastNames = ['Yılmaz', 'Kaya', 'Demir', 'Şahin', 'Çelik', 'Arslan', 'Öztürk', 'Kurt', 'Yıldız', 'Aydın'];
+
+const normalUsers = [];
+for (let i = 0; i < 50; i++) {
+  const userId = mpUsers.length + mediaUsers.length + organizationUsers.length + exPoliticianUsers.length + i + 1;
+  const firstName = citizenFirstNames[i % citizenFirstNames.length];
+  const lastName = citizenLastNames[Math.floor(Math.random() * citizenLastNames.length)];
+  const username = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${i}`;
+  
+  normalUsers.push({
+    user_id: userId,
+    username: username,
+    email: `${username}@example.com`,
+    full_name: `${firstName} ${lastName}`,
+    profile_image: getProfileImagePath('normal', null, username, userId),
+    bio: 'Vatandaş',
+    user_type: 'normal',
+    verification_badge: false,
+    polit_score: Math.floor(Math.random() * 2000) + 100,
+    follower_count: Math.floor(Math.random() * 500) + 50,
+    following_count: Math.floor(Math.random() * 300) + 50,
+    post_count: Math.floor(Math.random() * 100) + 5,
+    created_at: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString()
+  });
+}
 
 // Tüm kullanıcıları birleştir
-export const mockUsers = [...mpUsers, ...mediaUsers, ...normalUsers];
+export const mockUsers = [...mpUsers, ...mediaUsers, ...organizationUsers, ...exPoliticianUsers, ...normalUsers];
 
 // Daha fazla mock kullanıcı için helper
 export const generateMockUsers = (count = 40) => {

@@ -6,7 +6,7 @@ export const MediaSidebar = ({ posts = [] }) => {
   const scrollRef = useRef(null);
   const [canScrollUp, setCanScrollUp] = useState(false);
   const [canScrollDown, setCanScrollDown] = useState(true);
-  const mediaPosts = posts.filter(p => p.user?.user_type === 'media').slice(0, 10);
+  const mediaPosts = posts.filter(p => p.user?.user_type === 'media').slice(0, 30);
   
   // PostCard yerine PostCardHorizontal kullanarak genişliği eşitle
 
