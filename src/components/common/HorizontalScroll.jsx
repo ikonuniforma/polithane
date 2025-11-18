@@ -15,7 +15,6 @@ export const HorizontalScroll = ({
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [screenSize, setScreenSize] = useState('desktop');
   const [itemWidth, setItemWidth] = useState(null);
-  const [actualItemsCount, setActualItemsCount] = useState(null);
 
   useEffect(() => {
     const calculateItemWidth = () => {
