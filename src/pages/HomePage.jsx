@@ -1,38 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { HeroSlider } from '../components/home/HeroSlider';
 import { ParliamentBar } from '../components/home/ParliamentBar';
 import { AgendaBar } from '../components/home/AgendaBar';
 import { PostCardHorizontal } from '../components/post/PostCardHorizontal';
 import { HorizontalScroll } from '../components/common/HorizontalScroll';
 import { MediaSidebar } from '../components/media/MediaSidebar';
-import { mockPosts, generateMockPosts, getCategoryPosts } from '../mock/posts';
+import { getCategoryPosts } from '../mock/posts';
 import { mockParties } from '../mock/parties';
 import { mockAgendas } from '../mock/agendas';
-import { mockUsers } from '../mock/users';
 import { currentParliamentDistribution, totalSeats } from '../data/parliamentDistribution';
+import { usePostsStore } from '../store/postsStore';
 
 export const HomePage = () => {
-  const [posts, setPosts] = useState([]);
-  const [parties, setParties] = useState([]);
-  const [agendas, setAgendas] = useState([]);
+  const { posts, loadPosts, loading } = usePostsStore();
+  const parties = mockParties;
+  const agendas = mockAgendas;
   
   useEffect(() => {
-    // Mock data loading simulation
-    try {
-      setTimeout(() => {
-        const allPosts = generateMockPosts(400, mockUsers, mockParties);
-        setPosts(allPosts);
-        setParties(mockParties);
-        setAgendas(mockAgendas);
-      }, 100);
-    } catch (error) {
-      console.error('Error loading mock data:', error);
-      // Fallback: en azından boş array'ler set et
-      setPosts([]);
-      setParties([]);
-      setAgendas([]);
+    if (posts.length === 0) {
+      loadPosts(400);
     }
-  }, []);
+  }, [posts.length, loadPosts]);
   
   // Kategorilere göre post filtreleme - her kategori için 30 örnek (POLİT PUANA GÖRE SIRALANMIŞ)
   const mpPosts = posts.length > 0 ? getCategoryPosts('mps', posts) : [];

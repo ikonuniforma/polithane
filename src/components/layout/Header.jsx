@@ -4,12 +4,14 @@ import { Avatar } from '../common/Avatar';
 import { Badge } from '../common/Badge';
 import { AnimatedSlogan } from '../common/AnimatedSlogan';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../store/authStore';
+import { useUIStore } from '../../store/uiStore';
 
 export const Header = () => {
   const navigate = useNavigate();
-  const [notificationCount] = useState(5);
-  const [unreadMessages] = useState(3);
-  const [isLoggedIn] = useState(false); // Mock - gerçekte auth context'ten gelecek
+  const { isAuthenticated, user } = useAuthStore();
+  const { unreadNotificationCount } = useUIStore();
+  const [unreadMessages] = useState(3); // TODO: Messages store eklenecek
   
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200 h-[60px]">
@@ -32,24 +34,32 @@ export const Header = () => {
             <Search className="w-5 h-5 text-gray-600" />
           </button>
           
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <>
               {/* Bildirimler */}
-              <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <button 
+                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                onClick={() => {
+                  // TODO: Bildirimler sayfasına yönlendir
+                }}
+              >
                 <Bell className="w-5 h-5 text-gray-600" />
-                {notificationCount > 0 && (
+                {unreadNotificationCount > 0 && (
                   <Badge 
                     variant="danger" 
                     size="small"
                     className="absolute -top-1 -right-1"
                   >
-                    {notificationCount}
+                    {unreadNotificationCount}
                   </Badge>
                 )}
               </button>
               
               {/* Mesajlar */}
-              <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <button 
+                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                onClick={() => navigate('/messages')}
+              >
                 <MessageCircle className="w-5 h-5 text-gray-600" />
                 {unreadMessages > 0 && (
                   <Badge 
@@ -63,8 +73,12 @@ export const Header = () => {
               </button>
               
               {/* Kullanıcı Avatar */}
-              <button onClick={() => navigate('/profile/1')}>
-                <Avatar src="/assets/mock/avatars/user1.jpg" size="36px" />
+              <button onClick={() => navigate(`/profile/${user?.user_id}`)}>
+                <Avatar 
+                  src={user?.profile_image || '/assets/default/avatar.png'} 
+                  size="36px" 
+                  verified={user?.verification_badge}
+                />
               </button>
             </>
           ) : (

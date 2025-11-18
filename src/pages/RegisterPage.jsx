@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 import { toast } from 'react-hot-toast';
+import { useAuthStore } from '../store/authStore';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
+  const { register, loading, error } = useAuthStore();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     full_name: '',
@@ -22,8 +24,20 @@ export const RegisterPage = () => {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      toast.success('Kayıt başarılı!');
-      navigate('/login');
+      // Şifre kontrolü
+      if (formData.password !== formData.password_confirm) {
+        toast.error('Şifreler eşleşmiyor');
+        return;
+      }
+      
+      const result = await register(formData);
+      
+      if (result.success) {
+        toast.success('Kayıt başarılı!');
+        navigate('/');
+      } else {
+        toast.error(result.error || 'Kayıt başarısız');
+      }
     }
   };
   
@@ -130,13 +144,17 @@ export const RegisterPage = () => {
               </div>
             )}
             
+            {error && step === 3 && (
+              <div className="text-red-600 text-sm mb-2">{error}</div>
+            )}
+            
             <div className="flex gap-4 mt-6">
               {step > 1 && (
                 <Button type="button" variant="outline" onClick={() => setStep(step - 1)}>
                   Geri
                 </Button>
               )}
-              <Button type="submit" className="flex-1">
+              <Button type="submit" className="flex-1" loading={loading && step === 3}>
                 {step < 3 ? 'İleri' : 'Kayıt Ol'}
               </Button>
             </div>
