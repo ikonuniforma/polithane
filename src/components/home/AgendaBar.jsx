@@ -6,10 +6,10 @@ export const AgendaBar = ({ agendas = [] }) => {
   
   if (!agendas || agendas.length === 0) return null;
   
-  // İlk 20 gündem - 2 satıra böl (her satırda 10)
-  const trendingAgendas = agendas.slice(0, 20);
-  const firstRow = trendingAgendas.slice(0, 10);
-  const secondRow = trendingAgendas.slice(10, 20);
+  // Her satırda 9 gündem + 1 "TÜM GÜNDEME BAK" butonu
+  const trendingAgendas = agendas.slice(0, 18); // 18 gündem (her satırda 9)
+  const firstRow = trendingAgendas.slice(0, 9);
+  const secondRow = trendingAgendas.slice(9, 18);
   
   const AgendaButton = ({ agenda }) => (
     <button
@@ -23,6 +23,16 @@ export const AgendaBar = ({ agendas = [] }) => {
       <span className="text-xs bg-gray-100 hover:bg-white hover:text-primary-blue px-2 py-0.5 rounded-full font-semibold transition-colors flex-shrink-0">
         {formatPolitScore(agenda.total_polit_score)}
       </span>
+    </button>
+  );
+  
+  // "TÜM GÜNDEME BAK" butonu - Kurumsal mavi renk
+  const AllAgendasButton = () => (
+    <button
+      onClick={() => navigate('/agendas')}
+      className="flex items-center justify-center px-6 py-2 bg-primary-blue hover:bg-[#0088bb] text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex-shrink-0 font-bold text-sm"
+    >
+      TÜM GÜNDEME BAK
     </button>
   );
   
@@ -42,6 +52,7 @@ export const AgendaBar = ({ agendas = [] }) => {
           {firstRow.map((agenda) => (
             <AgendaButton key={agenda.agenda_id} agenda={agenda} />
           ))}
+          <AllAgendasButton />
         </div>
         
         {/* İkinci Satır */}
@@ -55,6 +66,7 @@ export const AgendaBar = ({ agendas = [] }) => {
             {secondRow.map((agenda) => (
               <AgendaButton key={agenda.agenda_id} agenda={agenda} />
             ))}
+            <AllAgendasButton />
           </div>
         )}
       </div>
