@@ -39,18 +39,31 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
 
   return (
     <div 
-      className={`card-hover ${fullWidth ? 'p-3 w-full' : 'p-4'} flex-shrink-0 cursor-pointer flex flex-col min-h-[400px]`}
+      className={`card-hover ${fullWidth ? 'p-3 w-full' : 'p-4'} flex-shrink-0 cursor-pointer flex flex-col min-h-[400px] relative`}
       style={fullWidth ? {} : { scrollSnapAlign: 'start', ...style }}
       onClick={() => navigate(`/post/${post.post_id}`)}
     >
+      {/* Parti Logosu - SAĞ ÜST KÖŞE */}
+      {post.user?.party_id && post.user?.party?.party_logo && (
+        <div className="absolute top-3 right-3 z-10">
+          <img 
+            src={post.user.party.party_logo} 
+            alt={post.user.party.party_short_name}
+            className="w-12 h-12 object-contain drop-shadow-md"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+        </div>
+      )}
+      
       {/* Üst Bilgi */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-3 pr-14">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <Avatar 
             src={getAvatarUrl(post.user?.profile_image)} 
             size="32px" 
             verified={post.user?.verification_badge}
-            partyLogo={post.user?.party_id ? post.user?.party?.party_logo : null}
           />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1 flex-wrap">
@@ -70,11 +83,6 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
               <span className="flex-shrink-0">{formatTimeAgo(post.created_at)}</span>
             </div>
           </div>
-        </div>
-        
-        {/* İçerik Tipi İkonu */}
-        <div className="text-gray-400 flex-shrink-0">
-          {getContentIcon()}
         </div>
       </div>
       
@@ -147,26 +155,13 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
           </div>
         )}
         
-        {/* Polit Puan ve Parti Logosu */}
+        {/* Polit Puan */}
         <div className="mb-2">
           <div className="flex items-center gap-2">
-            {/* Parti Logosu */}
-            {post.user?.party_id && post.user?.party?.party_logo && (
-              <img 
-                src={post.user.party.party_logo} 
-                alt={post.user.party.party_short_name}
-                className="w-8 h-8 object-contain flex-shrink-0"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-            )}
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-primary-blue">
-                {formatPolitScore(post.polit_score)}
-              </span>
-              <span className="text-xs text-gray-500 whitespace-nowrap">Polit Puan</span>
-            </div>
+            <span className="text-lg font-bold text-primary-blue">
+              {formatPolitScore(post.polit_score)}
+            </span>
+            <span className="text-xs text-gray-500">Polit Puan</span>
           </div>
         </div>
       </div>

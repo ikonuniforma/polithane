@@ -23,17 +23,30 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
   
   return (
     <div 
-      className="card-hover p-4 mb-4 w-full"
+      className="card-hover p-4 mb-4 w-full relative"
       onClick={() => navigate(`/post/${post.post_id}`)}
     >
+      {/* Parti Logosu - SAĞ ÜST KÖŞE */}
+      {post.user?.party_id && post.user?.party?.party_logo && (
+        <div className="absolute top-4 right-4 z-10">
+          <img 
+            src={post.user.party.party_logo} 
+            alt={post.user.party.party_short_name}
+            className="w-16 h-16 object-contain drop-shadow-md"
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+        </div>
+      )}
+      
       {/* Üst Bilgi */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-3 pr-20">
         <div className="flex items-center gap-3 flex-1">
           <Avatar 
             src={post.user?.profile_image} 
             size="40px" 
             verified={post.user?.verification_badge}
-            partyLogo={post.user?.party_id ? post.user?.party?.party_logo : null}
           />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
@@ -55,34 +68,13 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
           </div>
         </div>
         
-        {/* Polit Puan ve Parti Logosu */}
-        <div className="flex items-center gap-2 ml-2">
-          {/* Parti Logosu */}
-          {post.user?.party_id && post.user?.party?.party_logo && (
-            <div className="flex-shrink-0">
-              <img 
-                src={post.user.party.party_logo} 
-                alt={post.user.party.party_short_name}
-                className="w-12 h-12 object-contain"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-            </div>
-          )}
-          {/* Polit Puan */}
-          <div className="text-right">
-            <div className="text-lg font-bold text-primary-blue">
-              {formatPolitScore(post.polit_score)}
-            </div>
-            <div className="text-xs text-gray-500 whitespace-nowrap">Polit Puan</div>
+        {/* Polit Puan */}
+        <div className="text-right ml-2">
+          <div className="text-lg font-bold text-primary-blue">
+            {formatPolitScore(post.polit_score)}
           </div>
+          <div className="text-xs text-gray-500 whitespace-nowrap">Polit Puan</div>
         </div>
-      </div>
-      
-      {/* İçerik Tipi İkonu */}
-      <div className="absolute top-4 right-4 text-gray-400">
-        {getContentIcon()}
       </div>
       
       {/* İçerik */}

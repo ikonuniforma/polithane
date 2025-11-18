@@ -40,7 +40,6 @@ export const ProfilePage = () => {
               src={user.profile_image} 
               size="120px" 
               verified={user.verification_badge}
-              partyLogo={user.party_id ? user.party?.party_logo : null}
             />
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2 flex-wrap">

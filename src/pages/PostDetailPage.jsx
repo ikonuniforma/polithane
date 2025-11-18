@@ -45,7 +45,6 @@ export const PostDetailPage = () => {
                 src={post.user?.profile_image} 
                 size="60px" 
                 verified={post.user?.verification_badge}
-                partyLogo={post.user?.party_id ? post.user?.party?.party_logo : null}
               />
               <div className="flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
