@@ -3,23 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 import { toast } from 'react-hot-toast';
+import { useAuthStore } from '../store/authStore';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const { login, isLoading, error, clearError } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    clearError();
     
-    // Mock login
-    setTimeout(() => {
-      setLoading(false);
+    const result = await login(email, password);
+    
+    if (result.success) {
       toast.success('Giriş başarılı!');
       navigate('/');
-    }, 1000);
+    } else {
+      toast.error(result.error || 'Giriş yapılamadı');
+    }
   };
   
   return (
@@ -46,7 +49,12 @@ export const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <Button type="submit" className="w-full" loading={loading}>
+            {error && (
+              <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+                {error}
+              </div>
+            )}
+            <Button type="submit" className="w-full" loading={isLoading}>
               Giriş Yap
             </Button>
           </form>

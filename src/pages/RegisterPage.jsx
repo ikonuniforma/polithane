@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 import { toast } from 'react-hot-toast';
+import { useAuthStore } from '../store/authStore';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
+  const { register, isLoading, error, clearError } = useAuthStore();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     full_name: '',
@@ -19,11 +21,35 @@ export const RegisterPage = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    clearError();
+    
     if (step < 3) {
+      // Validasyon
+      if (step === 1) {
+        if (!formData.full_name || !formData.email || !formData.password) {
+          toast.error('Lütfen tüm alanları doldurun');
+          return;
+        }
+        if (formData.password !== formData.password_confirm) {
+          toast.error('Şifreler eşleşmiyor');
+          return;
+        }
+        if (formData.password.length < 6) {
+          toast.error('Şifre en az 6 karakter olmalıdır');
+          return;
+        }
+      }
       setStep(step + 1);
     } else {
-      toast.success('Kayıt başarılı!');
-      navigate('/login');
+      // Son adım - kayıt işlemi
+      const result = await register(formData);
+      
+      if (result.success) {
+        toast.success('Kayıt başarılı! Hoş geldiniz!');
+        navigate('/');
+      } else {
+        toast.error(result.error || 'Kayıt olunamadı');
+      }
     }
   };
   
@@ -130,13 +156,18 @@ export const RegisterPage = () => {
               </div>
             )}
             
+            {error && (
+              <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">
+                {error}
+              </div>
+            )}
             <div className="flex gap-4 mt-6">
               {step > 1 && (
                 <Button type="button" variant="outline" onClick={() => setStep(step - 1)}>
                   Geri
                 </Button>
               )}
-              <Button type="submit" className="flex-1">
+              <Button type="submit" className="flex-1" loading={isLoading && step === 3}>
                 {step < 3 ? 'İleri' : 'Kayıt Ol'}
               </Button>
             </div>
