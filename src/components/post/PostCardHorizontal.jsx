@@ -147,13 +147,26 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
           </div>
         )}
         
-        {/* Polit Puan */}
+        {/* Polit Puan ve Parti Logosu */}
         <div className="mb-2">
           <div className="flex items-center gap-2">
-            <span className="text-lg font-bold text-primary-blue">
-              {formatPolitScore(post.polit_score)}
-            </span>
-            <span className="text-xs text-gray-500">Polit Puan</span>
+            {/* Parti Logosu */}
+            {post.user?.party_id && post.user?.party?.party_logo && (
+              <img 
+                src={post.user.party.party_logo} 
+                alt={post.user.party.party_short_name}
+                className="w-8 h-8 object-contain flex-shrink-0"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            )}
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold text-primary-blue">
+                {formatPolitScore(post.polit_score)}
+              </span>
+              <span className="text-xs text-gray-500 whitespace-nowrap">Polit Puan</span>
+            </div>
           </div>
         </div>
       </div>

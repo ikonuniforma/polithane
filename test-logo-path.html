@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logo Test</title>
+</head>
+<body>
+    <h1>Parti Logoları Test</h1>
+    
+    <h2>1. AK PARTİ</h2>
+    <img src="/assets/parties/logos/ak_parti.png" style="width: 100px; height: 100px; border: 1px solid black;" onerror="this.style.border='3px solid red'; this.alt='HATA!'">
+    
+    <h2>2. CHP</h2>
+    <img src="/assets/parties/logos/chp.png" style="width: 100px; height: 100px; border: 1px solid black;" onerror="this.style.border='3px solid red'; this.alt='HATA!'">
+    
+    <h2>3. MHP</h2>
+    <img src="/assets/parties/logos/mhp.png" style="width: 100px; height: 100px; border: 1px solid black;" onerror="this.style.border='3px solid red'; this.alt='HATA!'">
+    
+    <h2>4. DEM Parti</h2>
+    <img src="/assets/parties/logos/dem_parti.png" style="width: 100px; height: 100px; border: 1px solid black;" onerror="this.style.border='3px solid red'; this.alt='HATA!'">
+    
+    <h2>5. İYİ PARTİ</h2>
+    <img src="/assets/parties/logos/iyi_parti.png" style="width: 100px; height: 100px; border: 1px solid black;" onerror="this.style.border='3px solid red'; this.alt='HATA!'">
+
+    <script>
+        console.log('Logo path test başladı...');
+        
+        // Test: Parti logo path fonksiyonu
+        const partyFileMap = {
+            'AK PARTİ': 'ak_parti',
+            'CHP': 'chp',
+            'DEM Parti': 'dem_parti',
+            'MHP': 'mhp',
+            'İYİ PARTİ': 'iyi_parti'
+        };
+        
+        Object.entries(partyFileMap).forEach(([partyName, fileName]) => {
+            const path = `/assets/parties/logos/${fileName}.png`;
+            console.log(`${partyName} -> ${path}`);
+        });
+    </script>
+</body>
+</html>

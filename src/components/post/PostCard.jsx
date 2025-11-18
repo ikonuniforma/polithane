@@ -55,12 +55,28 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
           </div>
         </div>
         
-        {/* Polit Puan */}
-        <div className="text-right ml-2">
-          <div className="text-lg font-bold text-primary-blue">
-            {formatPolitScore(post.polit_score)}
+        {/* Polit Puan ve Parti Logosu */}
+        <div className="flex items-center gap-2 ml-2">
+          {/* Parti Logosu */}
+          {post.user?.party_id && post.user?.party?.party_logo && (
+            <div className="flex-shrink-0">
+              <img 
+                src={post.user.party.party_logo} 
+                alt={post.user.party.party_short_name}
+                className="w-12 h-12 object-contain"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            </div>
+          )}
+          {/* Polit Puan */}
+          <div className="text-right">
+            <div className="text-lg font-bold text-primary-blue">
+              {formatPolitScore(post.polit_score)}
+            </div>
+            <div className="text-xs text-gray-500 whitespace-nowrap">Polit Puan</div>
           </div>
-          <div className="text-xs text-gray-500">Polit Puan</div>
         </div>
       </div>
       
