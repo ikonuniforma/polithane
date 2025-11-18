@@ -6,9 +6,11 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
   if (!parliamentData || parliamentData.length === 0) return null;
   
   return (
-    <div className="mb-4">
-      <h3 className="text-sm font-semibold text-gray-700 mb-2">MECLİS DAĞILIMI</h3>
-      <div className="flex h-24 rounded-lg overflow-hidden border border-gray-300">
+    <div className="w-full">
+      <div className="container-main">
+        <h3 className="text-sm font-semibold text-gray-700 mb-2">MECLİS DAĞILIMI</h3>
+      </div>
+      <div className="flex h-24 overflow-hidden border-y border-gray-300 w-full">
         {parliamentData.map((party, index) => {
           // Genişlik yüzdesi = (sandalye sayısı / toplam sandalye) * 100
           const widthPercentage = (party.seats / totalSeats) * 100;

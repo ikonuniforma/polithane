@@ -49,10 +49,14 @@ export const HomePage = () => {
       <div className="container-main py-6 lg:pr-0">
         {/* Manşet Slayt */}
         {featuredPosts.length > 0 && <HeroSlider posts={featuredPosts} />}
-        
-        {/* Parti Bayrakları - Meclis Dağılımı */}
+      </div>
+      
+      {/* Parti Bayrakları - Meclis Dağılımı - TAM GENİŞLİK */}
+      <div className="w-full px-0 mb-4">
         <ParliamentBar parliamentData={currentParliamentDistribution} totalSeats={totalSeats} />
-        
+      </div>
+      
+      <div className="container-main lg:pr-0">
         {/* Gündem Bar */}
         {agendas.length > 0 && <AgendaBar agendas={agendas} />}
         
