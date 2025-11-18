@@ -82,7 +82,7 @@ export const HorizontalScroll = ({
       
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4 px-2"
+        className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
