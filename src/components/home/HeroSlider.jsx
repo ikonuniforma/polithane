@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FileText, Image as ImageIcon, Video, Music } from 'lucide-react';
 import { Avatar } from '../common/Avatar';
 import { formatPolitScore } from '../../utils/formatters';
+import { getUserTitle } from '../../utils/titleHelpers';
 import { useNavigate } from 'react-router-dom';
 import { CONTENT_TYPES } from '../../utils/constants';
 
@@ -77,9 +78,27 @@ export const HeroSlider = ({ posts = [], autoplay = true, interval = 5000 }) => 
             <h2 className="text-base md:text-xl lg:text-2xl font-bold mb-0.5 line-clamp-2 drop-shadow-lg text-white">
               {currentPost.agenda_tag || 'Gündem'}
             </h2>
-            <p className="text-xs md:text-sm text-white/90 font-medium truncate">
-              {currentPost.user?.full_name} • {formatPolitScore(currentPost.polit_score)} PP
-            </p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-xs md:text-sm text-white/90 font-semibold truncate">
+                {currentPost.user?.full_name}
+              </p>
+              {getUserTitle(currentPost.user) && (
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-white/80">
+                    {getUserTitle(currentPost.user)}
+                  </span>
+                  {currentPost.user?.city_code && ['mp', 'provincial_chair', 'district_chair'].includes(currentPost.user?.politician_type) && (
+                    <span className="inline-flex items-center justify-center px-1.5 py-0.5 bg-white/90 text-gray-900 text-[10px] font-bold rounded-full">
+                      {currentPost.user.city_code}
+                    </span>
+                  )}
+                </div>
+              )}
+              <span className="text-xs text-white/70">•</span>
+              <span className="text-xs text-white/90 font-medium">
+                {formatPolitScore(currentPost.polit_score)} PP
+              </span>
+            </div>
           </div>
         </div>
         

@@ -74,17 +74,18 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
             </div>
             <div className="flex items-center gap-1.5 text-xs text-gray-500 flex-wrap">
               {getUserTitle(post.user) && (
-                <span className="flex-shrink-0 font-medium text-primary-blue">
-                  {getUserTitle(post.user)}
-                </span>
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  <span className="font-medium text-primary-blue">
+                    {getUserTitle(post.user)}
+                  </span>
+                  {post.user?.city_code && ['mp', 'provincial_chair', 'district_chair'].includes(post.user?.politician_type) && (
+                    <span className="inline-flex items-center justify-center px-1.5 py-0.5 bg-gray-900 text-white text-[10px] font-bold rounded-full">
+                      {post.user.city_code}
+                    </span>
+                  )}
+                </div>
               )}
-              {getUserTitle(post.user) && showCity && post.user?.city_code && (
-                <span className="flex-shrink-0">•</span>
-              )}
-              {showCity && post.user?.city_code && (
-                <span className="flex-shrink-0">{post.user.city_code}</span>
-              )}
-              {(getUserTitle(post.user) || (showCity && post.user?.city_code)) && (
+              {getUserTitle(post.user) && (
                 <span className="flex-shrink-0">•</span>
               )}
               <span className="flex-shrink-0">{formatTimeAgo(post.created_at)}</span>

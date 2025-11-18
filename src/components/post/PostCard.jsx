@@ -57,17 +57,18 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
               {getUserTitle(post.user) && (
-                <span className="flex-shrink-0 font-medium text-primary-blue">
-                  {getUserTitle(post.user)}
-                </span>
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  <span className="font-medium text-primary-blue">
+                    {getUserTitle(post.user)}
+                  </span>
+                  {post.user?.city_code && ['mp', 'provincial_chair', 'district_chair'].includes(post.user?.politician_type) && (
+                    <span className="inline-flex items-center justify-center px-2 py-0.5 bg-gray-900 text-white text-xs font-semibold rounded-full">
+                      {post.user.city_code}
+                    </span>
+                  )}
+                </div>
               )}
-              {getUserTitle(post.user) && showCity && post.user?.city_code && (
-                <span className="flex-shrink-0">•</span>
-              )}
-              {showCity && post.user?.city_code && (
-                <span className="flex-shrink-0">{post.user.city_code}</span>
-              )}
-              {(getUserTitle(post.user) || (showCity && post.user?.city_code)) && (
+              {getUserTitle(post.user) && (
                 <span className="flex-shrink-0">•</span>
               )}
               <span className="flex-shrink-0">{formatTimeAgo(post.created_at)}</span>
