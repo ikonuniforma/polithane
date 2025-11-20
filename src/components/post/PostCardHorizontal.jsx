@@ -146,27 +146,126 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
         {/* Görsel/İkon Alanı - Her zaman 150px yükseklikte */}
         <div className="relative w-full rounded-lg overflow-hidden mb-2" style={{ height: '150px' }}>
           {post.content_type === CONTENT_TYPES.TEXT && (
-            // Yazı içeriği için ikon
-            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-              <FileText className="w-16 h-16 text-gray-400" />
+            // Yazı içeriği - Defter zemin + 3D kalem
+            <div className="w-full h-full bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 flex items-center justify-center relative"
+                 style={{
+                   backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 24px, #e5e7eb 24px, #e5e7eb 25px)',
+                 }}>
+              {/* 3D Kalem İkonu */}
+              <div className="relative" style={{ filter: 'drop-shadow(4px 6px 8px rgba(0,0,0,0.3))' }}>
+                <svg width="80" height="80" viewBox="0 0 100 100" className="transform rotate-[-20deg]">
+                  {/* Kalem gövdesi */}
+                  <rect x="30" y="10" width="12" height="70" fill="#FCD34D" stroke="#F59E0B" strokeWidth="1"/>
+                  <rect x="30" y="10" width="6" height="70" fill="#FDE68A" opacity="0.6"/>
+                  {/* Kalem ucu */}
+                  <polygon points="36,80 30,90 42,90" fill="#78716C" stroke="#57534E" strokeWidth="1"/>
+                  <polygon points="36,80 30,90 36,90" fill="#A8A29E" opacity="0.5"/>
+                  {/* Silgi */}
+                  <rect x="30" y="5" width="12" height="8" fill="#EF4444" stroke="#DC2626" strokeWidth="1" rx="1"/>
+                  <rect x="30" y="5" width="6" height="8" fill="#FCA5A5" opacity="0.5" rx="1"/>
+                </svg>
+              </div>
             </div>
           )}
-          {post.content_type === CONTENT_TYPES.IMAGE && (
-            <>
-              <img 
-                src={getImageUrl(post.media_url)} 
-                alt=""
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.src = getPlaceholderImage('post', post.post_id);
-                }}
-              />
-              {/* Resim ikonu overlay */}
-              <div className="absolute top-2 left-2 bg-white/90 rounded-full p-1.5">
-                <ImageIcon className="w-4 h-4 text-primary-blue" />
+          {post.content_type === CONTENT_TYPES.IMAGE && (() => {
+            // Resimleri array'e çevir (tek resim veya çoklu)
+            const images = Array.isArray(post.media_url) ? post.media_url : [post.media_url];
+            const imageCount = images.length;
+            
+            // 1 Resim - Tam alan
+            if (imageCount === 1) {
+              return (
+                <img 
+                  src={getImageUrl(images[0])} 
+                  alt=""
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.target.src = getPlaceholderImage('post', post.post_id); }}
+                />
+              );
+            }
+            
+            // 2 Resim - İkiye böl
+            if (imageCount === 2) {
+              return (
+                <div className="w-full h-full grid grid-cols-2 gap-0.5">
+                  {images.slice(0, 2).map((img, idx) => (
+                    <img 
+                      key={idx}
+                      src={getImageUrl(img)} 
+                      alt=""
+                      className="w-full h-full object-cover"
+                      onError={(e) => { e.target.src = getPlaceholderImage('post', post.post_id + idx); }}
+                    />
+                  ))}
+                </div>
+              );
+            }
+            
+            // 3 Resim - Sol yarı 1 büyük, sağ yarı 2 küçük
+            if (imageCount === 3) {
+              return (
+                <div className="w-full h-full grid grid-cols-2 gap-0.5">
+                  <img 
+                    src={getImageUrl(images[0])} 
+                    alt=""
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.src = getPlaceholderImage('post', post.post_id); }}
+                  />
+                  <div className="grid grid-rows-2 gap-0.5">
+                    {images.slice(1, 3).map((img, idx) => (
+                      <img 
+                        key={idx}
+                        src={getImageUrl(img)} 
+                        alt=""
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.src = getPlaceholderImage('post', post.post_id + idx + 1); }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+            
+            // 4 Resim - 2x2 grid
+            if (imageCount === 4) {
+              return (
+                <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-0.5">
+                  {images.slice(0, 4).map((img, idx) => (
+                    <img 
+                      key={idx}
+                      src={getImageUrl(img)} 
+                      alt=""
+                      className="w-full h-full object-cover"
+                      onError={(e) => { e.target.src = getPlaceholderImage('post', post.post_id + idx); }}
+                    />
+                  ))}
+                </div>
+              );
+            }
+            
+            // 5+ Resim - İlk 3 resim + "Tümü" butonu
+            return (
+              <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-0.5">
+                {images.slice(0, 3).map((img, idx) => (
+                  <img 
+                    key={idx}
+                    src={getImageUrl(img)} 
+                    alt=""
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.src = getPlaceholderImage('post', post.post_id + idx); }}
+                  />
+                ))}
+                {/* Tümü Butonu */}
+                <div className="w-full h-full bg-black bg-opacity-60 flex items-center justify-center cursor-pointer hover:bg-opacity-70 transition-all">
+                  <div className="text-center">
+                    <div className="text-4xl text-white mb-1">+</div>
+                    <div className="text-white text-xs font-semibold">Tümü</div>
+                    <div className="text-white text-[10px]">({imageCount})</div>
+                  </div>
+                </div>
               </div>
-            </>
-          )}
+            );
+          })()}
           {post.content_type === CONTENT_TYPES.VIDEO && (
             <>
               <img 
@@ -177,10 +276,26 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
                   e.target.src = getPlaceholderImage('post', post.post_id);
                 }}
               />
-              {/* Play ikonu overlay */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-                <div className="bg-white rounded-full p-3">
-                  <Video className="w-8 h-8 text-primary-blue" />
+              {/* 3D Play Butonu */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative" style={{ filter: 'drop-shadow(4px 6px 12px rgba(0,0,0,0.4))' }}>
+                  <svg width="80" height="80" viewBox="0 0 100 100">
+                    {/* Dış çember - shadow */}
+                    <circle cx="50" cy="53" r="35" fill="rgba(0,0,0,0.2)"/>
+                    {/* Ana çember - gradient */}
+                    <defs>
+                      <linearGradient id="playGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#e5e7eb" stopOpacity="1" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="35" fill="url(#playGradient)" stroke="#d1d5db" strokeWidth="2"/>
+                    {/* İç gölge efekti */}
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="#ffffff" strokeWidth="1" opacity="0.5"/>
+                    {/* Play üçgeni */}
+                    <polygon points="42,35 42,65 68,50" fill="#009fd6" stroke="#0088bb" strokeWidth="1"/>
+                    <polygon points="42,35 42,50 55,42.5" fill="#00b4f0" opacity="0.6"/>
+                  </svg>
                 </div>
               </div>
               {/* Süre */}
@@ -190,11 +305,33 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
             </>
           )}
           {post.content_type === CONTENT_TYPES.AUDIO && (
-            // Ses içeriği için müzik ikonu
-            <div className="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+            // Ses içeriği - 3D Mikrofon
+            <div className="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center relative">
               <div className="text-center">
-                <Music className="w-16 h-16 text-primary-blue mx-auto mb-2" />
-                <p className="text-sm text-gray-600">{formatDuration(post.media_duration)}</p>
+                {/* 3D Mikrofon İkonu */}
+                <div className="relative inline-block mb-4" style={{ filter: 'drop-shadow(4px 6px 10px rgba(0,0,0,0.3))' }}>
+                  <svg width="60" height="80" viewBox="0 0 100 120">
+                    {/* Mikrofon başı */}
+                    <defs>
+                      <linearGradient id="micGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#3b82f6" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#1e40af" stopOpacity="1" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="35" y="20" width="30" height="40" rx="15" fill="url(#micGradient)" stroke="#1e3a8a" strokeWidth="2"/>
+                    <rect x="35" y="20" width="15" height="40" rx="15" fill="#60a5fa" opacity="0.5"/>
+                    {/* Mikrofon gövdesi */}
+                    <path d="M 35 65 Q 35 80 50 80 Q 65 80 65 65" stroke="#1e3a8a" strokeWidth="3" fill="none"/>
+                    {/* Stand */}
+                    <line x1="50" y1="80" x2="50" y2="100" stroke="#1e3a8a" strokeWidth="3"/>
+                    <line x1="35" y1="100" x2="65" y2="100" stroke="#1e3a8a" strokeWidth="4" strokeLinecap="round"/>
+                    {/* Grid çizgileri */}
+                    <line x1="40" y1="30" x2="60" y2="30" stroke="#1e40af" strokeWidth="1" opacity="0.5"/>
+                    <line x1="40" y1="40" x2="60" y2="40" stroke="#1e40af" strokeWidth="1" opacity="0.5"/>
+                    <line x1="40" y1="50" x2="60" y2="50" stroke="#1e40af" strokeWidth="1" opacity="0.5"/>
+                  </svg>
+                </div>
+                <p className="text-sm text-gray-700 font-semibold">{formatDuration(post.media_duration)}</p>
               </div>
             </div>
           )}
@@ -207,26 +344,18 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
           </p>
         )}
         
-        {/* REKLAM ALANI - İçerik ile gündem arasında (full width x 70px) */}
-        <div className="w-full h-[70px] mb-2 overflow-hidden rounded-lg">
+        {/* REKLAM ALANI - İçerik ile gündem arasında (full width x 20px) */}
+        <div className="w-full h-[20px] mb-2 overflow-hidden rounded-md">
           <div 
-            className="w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-purple-600 hover:via-pink-600 hover:to-red-600 cursor-pointer flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-lg"
+            className="w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-purple-600 hover:via-pink-600 hover:to-red-600 cursor-pointer flex items-center justify-center transition-all duration-300"
             onClick={(e) => {
               e.stopPropagation();
-              // Rastgele reklam URL'leri
-              const ads = [
-                'https://example.com/ad1',
-                'https://example.com/ad2',
-                'https://example.com/ad3'
-              ];
+              const ads = ['https://example.com/ad1', 'https://example.com/ad2', 'https://example.com/ad3'];
               const randomAd = ads[Math.floor(Math.random() * ads.length)];
               window.open(randomAd, '_blank');
             }}
           >
-            <div className="text-center px-4">
-              <p className="text-white font-bold text-sm mb-1">🎯 Sponsorlu İçerik</p>
-              <p className="text-white/90 text-xs">Reklam Alanı - 280x70px</p>
-            </div>
+            <p className="text-white font-bold text-[10px]">🎯 Sponsorlu İçerik</p>
           </div>
         </div>
       </div>
