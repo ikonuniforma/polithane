@@ -77,9 +77,9 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
         })}
       </div>
       
-      {/* Plaka Kodları - 1'den 81'e kadar (TEK SATIR - BİTİŞİK) */}
+      {/* Plaka Kodları - 1'den 81'e kadar (TEK SATIR - TAMAMEN BİTİŞİK) */}
       <div className="bg-gray-50 px-2 py-2 rounded-b-lg border border-t-0 border-gray-300 overflow-x-auto">
-        <div className="flex gap-0.5 justify-center">
+        <div className="flex gap-0 justify-center">
           {Array.from({ length: 81 }, (_, i) => {
             const code = i + 1;
             const cityCode = code.toString().padStart(2, '0');
@@ -107,7 +107,7 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
               <button
                 key={code}
                 onClick={() => navigate(`/city/${cityCode}`)}
-                className="w-5 h-5 rounded-full bg-gray-900 hover:bg-primary-blue text-white text-[6px] font-bold flex items-center justify-center transition-colors flex-shrink-0"
+                className="w-[18px] h-[18px] rounded-full bg-gray-900 hover:bg-primary-blue text-white text-[9px] font-bold flex items-center justify-center transition-colors flex-shrink-0 leading-none"
                 title={cityNames[cityCode] || `${code} plaka kodu`}
               >
                 {code}
