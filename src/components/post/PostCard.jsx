@@ -68,22 +68,24 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
             />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span 
-                className="font-semibold text-gray-900 break-words cursor-pointer hover:text-primary-blue transition-colors"
+            {/* İsim - Her zaman 2 satırlık alan */}
+            <div className="min-h-[2.5rem] mb-1">
+              <h3 
+                className="font-semibold text-base text-gray-900 cursor-pointer hover:text-primary-blue transition-colors line-clamp-2 leading-5"
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate(`/profile/${post.user?.user_id}`);
                 }}
               >
                 {post.user?.full_name}
-              </span>
+              </h3>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
-              {getUserTitle(post.user) && (
+            {/* Ünvan ve İl Kodu - Tek satır */}
+            <div className="flex items-center gap-2 text-sm text-gray-500 flex-nowrap overflow-hidden">
+              {getUserTitle(post.user, true) && (
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   <span 
-                    className="font-medium text-primary-blue cursor-pointer hover:underline"
+                    className="font-medium text-primary-blue cursor-pointer hover:underline whitespace-nowrap text-xs"
                     onClick={(e) => {
                       e.stopPropagation();
                       // Kullanıcı tipine göre kategori sayfasına yönlendir
@@ -100,7 +102,7 @@ export const PostCard = ({ post, showCity = false, showPartyLogo = false, showPo
                       }
                     }}
                   >
-                    {getUserTitle(post.user)}
+                    {getUserTitle(post.user, true)}
                   </span>
                   {/* İl kodu - Tüm kullanıcılarda göster */}
                   {post.user?.city_code && (

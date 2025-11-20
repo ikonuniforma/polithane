@@ -13,7 +13,7 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
   return (
     <div className="mb-4 hidden md:block">
       <h3 className="text-sm font-semibold text-gray-700 mb-2">MECLİS DAĞILIMI</h3>
-      <div className="flex h-24 overflow-hidden rounded-lg border border-gray-300 w-full">
+      <div className="flex h-24 overflow-hidden rounded-t-lg border border-gray-300 w-full">
         {parliamentData.map((party, index) => {
           // Genişlik yüzdesi = (sandalye sayısı / toplam sandalye) * 100
           const widthPercentage = (party.seats / totalSeats) * 100;
@@ -75,6 +75,20 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
             </div>
           );
         })}
+      </div>
+      
+      {/* Plaka Kodları - 1'den 81'e kadar */}
+      <div className="flex flex-wrap gap-1 bg-gray-50 p-3 rounded-b-lg border border-t-0 border-gray-300">
+        {Array.from({ length: 81 }, (_, i) => i + 1).map((code) => (
+          <button
+            key={code}
+            onClick={() => navigate(`/city/${code.toString().padStart(2, '0')}`)}
+            className="w-7 h-7 rounded-full bg-gray-900 hover:bg-primary-blue text-white text-xs font-bold flex items-center justify-center transition-colors shadow-sm hover:shadow-md"
+            title={`${code} plaka kodlu il`}
+          >
+            {code}
+          </button>
+        ))}
       </div>
       
       {/* Parti Detay Popup */}

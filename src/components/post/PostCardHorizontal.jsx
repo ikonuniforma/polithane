@@ -85,22 +85,24 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
             />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1 flex-wrap">
-              <span 
-                className="font-semibold text-sm text-gray-900 break-words cursor-pointer hover:text-primary-blue transition-colors"
+            {/* İsim - Her zaman 2 satırlık alan */}
+            <div className="h-8 mb-1">
+              <h3 
+                className="font-semibold text-sm text-gray-900 cursor-pointer hover:text-primary-blue transition-colors line-clamp-2 leading-4"
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate(`/profile/${post.user?.user_id}`);
                 }}
               >
                 {post.user?.full_name}
-              </span>
+              </h3>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-gray-500 flex-wrap">
-              {getUserTitle(post.user) && (
+            {/* Ünvan ve İl Kodu - Tek satır */}
+            <div className="flex items-center gap-1.5 text-xs text-gray-500 flex-nowrap overflow-hidden">
+              {getUserTitle(post.user, true) && (
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <span 
-                    className="font-medium text-primary-blue cursor-pointer hover:underline"
+                    className="font-medium text-primary-blue cursor-pointer hover:underline whitespace-nowrap text-[11px]"
                     onClick={(e) => {
                       e.stopPropagation();
                       // Kullanıcı tipine göre kategori sayfasına yönlendir
@@ -117,7 +119,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
                       }
                     }}
                   >
-                    {getUserTitle(post.user)}
+                    {getUserTitle(post.user, true)}
                   </span>
                   {/* İl kodu - Tüm kullanıcılarda göster */}
                   {post.user?.city_code && (
@@ -206,8 +208,8 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
           </p>
         )}
         
-        {/* REKLAM ALANI - İçerik ile gündem arasında (280px x 70px) */}
-        <div className="w-full h-[70px] mb-3 overflow-hidden rounded-lg">
+        {/* REKLAM ALANI - İçerik ile gündem arasında (full width x 70px) */}
+        <div className="w-full h-[70px] mb-2 overflow-hidden rounded-lg">
           <div 
             className="w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-purple-600 hover:via-pink-600 hover:to-red-600 cursor-pointer flex items-center justify-center transition-all duration-300 shadow-md hover:shadow-lg"
             onClick={(e) => {
@@ -232,9 +234,13 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
       
       {/* Gündem Etiketi ve Polit Puan - Alt kısım */}
       <div className="mt-auto">
+        {/* Boşluk - Reklam ile gündem arası */}
+        <div className="h-2"></div>
+        
+        {/* Gündem Başlığı - Her zaman 2 satır */}
         {post.agenda_tag && (
           <div 
-            className="mb-2 cursor-pointer inline-block"
+            className="mb-2 cursor-pointer h-10"
             onClick={(e) => {
               e.stopPropagation();
               // Gündem slug'ını oluştur
@@ -245,9 +251,9 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
               navigate(`/agenda/${slug}`);
             }}
           >
-            <Badge variant="primary" size="small">
+            <div className="inline-block px-3 py-1 bg-primary-blue text-white rounded-full text-xs font-medium line-clamp-2 leading-[18px] max-w-full">
               {post.agenda_tag}
-            </Badge>
+            </div>
           </div>
         )}
         

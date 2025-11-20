@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HeroSlider } from '../components/home/HeroSlider';
 import { ParliamentBar } from '../components/home/ParliamentBar';
+import { StoriesBar } from '../components/home/StoriesBar';
 import { AgendaBar } from '../components/home/AgendaBar';
 import { PostCardHorizontal } from '../components/post/PostCardHorizontal';
 import { HorizontalScroll } from '../components/common/HorizontalScroll';
@@ -109,6 +110,9 @@ export const HomePage = () => {
         {/* Parti Bayrakları - Meclis Dağılımı */}
         <ParliamentBar parliamentData={currentParliamentDistribution} totalSeats={totalSeats} />
         
+        {/* Stories/Reels Bar */}
+        <StoriesBar />
+        
         {/* Gündem Bar */}
         {agendas.length > 0 && <AgendaBar agendas={agendas} />}
         
@@ -166,7 +170,7 @@ export const HomePage = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">🔥</span>
-                    <h2 className="text-xl font-bold text-gray-900">HİT GÜNDEMLER</h2>
+                    <h2 className="text-xl font-bold text-gray-900">HİT PAYLAŞIMLAR</h2>
                     <span className="text-sm text-gray-500 font-medium">Tüm Kategorilerden</span>
                   </div>
                   <a href="/category/all" className="text-primary-blue hover:underline text-sm">

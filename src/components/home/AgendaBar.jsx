@@ -38,7 +38,7 @@ export const AgendaBar = ({ agendas = [] }) => {
       <button
         key={agenda.agenda_id}
         onClick={() => navigate(`/agenda/${agenda.agenda_slug}`)}
-        className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 hover:border-primary-blue hover:bg-primary-blue hover:text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex-1 min-w-0"
+        className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 hover:border-primary-blue hover:bg-primary-blue hover:text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex-1 min-w-0 h-[42px]"
       >
         {fireIcon && <span className="flex-shrink-0">{fireIcon}</span>}
         <span className="text-sm font-medium truncate text-left flex-1">
@@ -55,7 +55,7 @@ export const AgendaBar = ({ agendas = [] }) => {
   const AdSpace = () => (
     <div className="flex-1 min-w-[180px] max-w-[220px]">
       <div
-        className="h-full px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center"
+        className="h-[42px] px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center"
         onClick={() => window.open('https://yusufbank.com', '_blank')}
       >
         <div className="text-center">
@@ -70,7 +70,7 @@ export const AgendaBar = ({ agendas = [] }) => {
   const AllAgendasButton = () => (
     <button
       onClick={() => navigate('/agendas')}
-      className="flex items-center justify-center px-6 py-2 bg-primary-blue hover:bg-[#0088bb] text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex-shrink-0 font-bold text-sm"
+      className="flex items-center justify-center px-6 py-2 bg-primary-blue hover:bg-[#0088bb] text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex-shrink-0 font-bold text-sm h-[42px]"
     >
       TÜM GÜNDEME BAK
     </button>
