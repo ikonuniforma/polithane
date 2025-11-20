@@ -146,10 +146,11 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
         {/* Görsel/İkon Alanı - Her zaman 150px yükseklikte */}
         <div className="relative w-full rounded-lg overflow-hidden mb-2" style={{ height: '150px' }}>
           {post.content_type === CONTENT_TYPES.TEXT && (
-            // Yazı içeriği - Defter zemin + 3D kalem
-            <div className="w-full h-full bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 flex items-center justify-center relative"
+            // Yazı içeriği - Defter zemin + 3D kalem + ince border
+            <div className="w-full h-full bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 flex items-center justify-center relative border border-gray-300"
                  style={{
                    backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 24px, #e5e7eb 24px, #e5e7eb 25px)',
+                   boxShadow: 'inset 0 0 0 1px rgba(229, 231, 235, 0.5)'
                  }}>
               {/* 3D Kalem İkonu */}
               <div className="relative" style={{ filter: 'drop-shadow(4px 6px 8px rgba(0,0,0,0.3))' }}>
