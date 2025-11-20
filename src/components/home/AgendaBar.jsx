@@ -5,7 +5,7 @@ import { formatPolitScore } from '../../utils/formatters';
 
 export const AgendaBar = ({ agendas = [] }) => {
   const navigate = useNavigate();
-  const [visibleCount, setVisibleCount] = useState(3); // Başlangıçta 3 gündem
+  const [visibleCount, setVisibleCount] = useState(4); // Başlangıçta 4 gündem (3 gündem + 1 reklam)
   
   if (!agendas || agendas.length === 0) return null;
   
@@ -86,7 +86,7 @@ export const AgendaBar = ({ agendas = [] }) => {
               onClick={showMore}
               className="text-xs text-white bg-primary-blue hover:bg-[#0088bb] px-3 py-1 rounded-full font-bold transition-colors"
             >
-              {visibleCount === 3 ? 'Tümünü Gör' : 'Devam Et'}
+              {visibleCount === 4 ? 'Tümünü Gör' : 'Devam Et'}
             </button>
           )}
         </div>
