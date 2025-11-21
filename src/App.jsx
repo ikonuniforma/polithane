@@ -13,62 +13,73 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { MessagesPage } from './pages/MessagesPage';
 import { SearchPage } from './pages/SearchPage';
-import { AdminDashboard } from './pages/admin/AdminDashboard';
 
-// Yeni sayfalar
+// Auth Pages
 import { LoginPageNew } from './pages/auth/LoginPageNew';
 import { RegisterPageNew } from './pages/auth/RegisterPageNew';
-import { AlgorithmSettings } from './pages/admin/AlgorithmSettings';
-import { UserManagement } from './pages/admin/UserManagement';
+
+// Settings Pages
 import { SettingsLayout } from './pages/settings/SettingsLayout';
 import { ProfileSettings } from './pages/settings/ProfileSettings';
+
+// Admin Pages
+import { AdminLayout } from './components/admin/AdminLayout';
+import { AdminDashboardNew } from './pages/admin/AdminDashboardNew';
+import { AlgorithmSettings } from './pages/admin/AlgorithmSettings';
+import { UserManagement } from './pages/admin/UserManagement';
+import { PostModeration } from './pages/admin/PostModeration';
+import { ThemeEditor } from './pages/admin/ThemeEditor';
+import { SiteSettings } from './pages/admin/SiteSettings';
+import { SEOSettings } from './pages/admin/SEOSettings';
+import { AutomationControl } from './pages/admin/AutomationControl';
+import { AdsManagement } from './pages/admin/AdsManagement';
+import { AnalyticsDashboard } from './pages/admin/AnalyticsDashboard';
 
 function App() {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/post/:postId" element={<PostDetailPage />} />
-          <Route path="/profile/:userId" element={<ProfilePage />} />
-          <Route path="/party/:partyId" element={<PartyDetailPage />} />
-          <Route path="/agenda/:agendaSlug" element={<AgendaDetailPage />} />
-          <Route path="/city/:cityCode" element={<CityDetailPage />} />
-          
-          {/* Auth Routes */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/login-new" element={<LoginPageNew />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/register-new" element={<RegisterPageNew />} />
-          
-          {/* Messages */}
-          <Route path="/messages" element={<MessagesPage />} />
-          <Route path="/search" element={<SearchPage />} />
-          
-          {/* Settings Routes */}
-          <Route path="/settings" element={<SettingsLayout />}>
-            <Route path="profile" element={<ProfileSettings />} />
-            <Route path="account" element={<div className="p-8 text-center text-gray-500">Hesap Ayarları - Yakında</div>} />
-            <Route path="security" element={<div className="p-8 text-center text-gray-500">Güvenlik Ayarları - Yakında</div>} />
-            <Route path="notifications" element={<div className="p-8 text-center text-gray-500">Bildirim Ayarları - Yakında</div>} />
-            <Route path="privacy" element={<div className="p-8 text-center text-gray-500">Gizlilik Ayarları - Yakında</div>} />
-            <Route path="appearance" element={<div className="p-8 text-center text-gray-500">Görünüm Ayarları - Yakında</div>} />
-            <Route path="data" element={<div className="p-8 text-center text-gray-500">Veri İndirme - Yakında</div>} />
-            <Route path="delete" element={<div className="p-8 text-center text-gray-500">Hesap Silme - Yakında</div>} />
-          </Route>
-          
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/algorithm" element={<AlgorithmSettings />} />
-          <Route path="/admin/users" element={<UserManagement />} />
-          <Route path="/admin/posts" element={<div className="p-8 text-center text-gray-500">Post Moderasyonu - Yakında</div>} />
-          <Route path="/admin/automation" element={<div className="p-8 text-center text-gray-500">Otomasyon Kontrol - Yakında</div>} />
-          <Route path="/admin/analytics" element={<div className="p-8 text-center text-gray-500">Analitikler - Yakında</div>} />
-        </Routes>
-      </main>
-      <Footer />
-      <FloatingChat />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<><Header /><HomePage /><Footer /><FloatingChat /></>} />
+        <Route path="/post/:postId" element={<><Header /><PostDetailPage /><Footer /><FloatingChat /></>} />
+        <Route path="/profile/:userId" element={<><Header /><ProfilePage /><Footer /><FloatingChat /></>} />
+        <Route path="/party/:partyId" element={<><Header /><PartyDetailPage /><Footer /><FloatingChat /></>} />
+        <Route path="/agenda/:agendaSlug" element={<><Header /><AgendaDetailPage /><Footer /><FloatingChat /></>} />
+        <Route path="/city/:cityCode" element={<><Header /><CityDetailPage /><Footer /><FloatingChat /></>} />
+        <Route path="/messages" element={<><Header /><MessagesPage /><Footer /><FloatingChat /></>} />
+        <Route path="/search" element={<><Header /><SearchPage /><Footer /><FloatingChat /></>} />
+        
+        {/* Auth Routes (No Header/Footer) */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login-new" element={<LoginPageNew />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register-new" element={<RegisterPageNew />} />
+        
+        {/* Settings Routes */}
+        <Route path="/settings" element={<><Header /><SettingsLayout /><Footer /></>}>
+          <Route path="profile" element={<ProfileSettings />} />
+          <Route path="account" element={<div className="p-8 text-center text-gray-500">Hesap Ayarları - Yakında</div>} />
+          <Route path="security" element={<div className="p-8 text-center text-gray-500">Güvenlik - Yakında</div>} />
+          <Route path="notifications" element={<div className="p-8 text-center text-gray-500">Bildirimler - Yakında</div>} />
+          <Route path="privacy" element={<div className="p-8 text-center text-gray-500">Gizlilik - Yakında</div>} />
+          <Route path="appearance" element={<div className="p-8 text-center text-gray-500">Görünüm - Yakında</div>} />
+        </Route>
+        
+        {/* Admin Routes (With Sidebar) */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboardNew />} />
+          <Route path="analytics" element={<AnalyticsDashboard />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="posts" element={<PostModeration />} />
+          <Route path="algorithm" element={<AlgorithmSettings />} />
+          <Route path="site-settings" element={<SiteSettings />} />
+          <Route path="theme" element={<ThemeEditor />} />
+          <Route path="seo" element={<SEOSettings />} />
+          <Route path="automation" element={<AutomationControl />} />
+          <Route path="ads" element={<AdsManagement />} />
+        </Route>
+      </Routes>
+      
       <Toaster position="top-right" />
     </div>
   );
