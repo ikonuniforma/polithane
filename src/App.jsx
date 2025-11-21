@@ -22,8 +22,10 @@ import { RegisterPageNew } from './pages/auth/RegisterPageNew';
 import { SettingsLayout } from './pages/settings/SettingsLayout';
 import { ProfileSettings } from './pages/settings/ProfileSettings';
 import { AccountSettings } from './pages/settings/AccountSettings';
-import { SecuritySettings } from './pages/settings/SecuritySettings';
+import { SecuritySettings as UserSecuritySettings } from './pages/settings/SecuritySettings';
 import { NotificationSettings } from './pages/settings/NotificationSettings';
+import { PrivacySettings } from './pages/settings/PrivacySettings';
+import { AppearanceSettings } from './pages/settings/AppearanceSettings';
 
 // Admin Pages
 import { AdminLayout } from './components/admin/AdminLayout';
@@ -37,6 +39,17 @@ import { SEOSettings } from './pages/admin/SEOSettings';
 import { AutomationControl } from './pages/admin/AutomationControl';
 import { AdsManagement } from './pages/admin/AdsManagement';
 import { AnalyticsDashboard } from './pages/admin/AnalyticsDashboard';
+import { CommentModeration } from './pages/admin/CommentModeration';
+import { MediaManagement } from './pages/admin/MediaManagement';
+import { EmailTemplates } from './pages/admin/EmailTemplates';
+import { NotificationRules } from './pages/admin/NotificationRules';
+import { ScrapingManagement } from './pages/admin/ScrapingManagement';
+import { SourceManagement } from './pages/admin/SourceManagement';
+import { PaymentSystem } from './pages/admin/PaymentSystem';
+import { RevenueAnalysis } from './pages/admin/RevenueAnalysis';
+import { SecuritySettings } from './pages/admin/SecuritySettings';
+import { DatabaseManagement } from './pages/admin/DatabaseManagement';
+import { APISettings } from './pages/admin/APISettings';
 
 function App() {
   return (
@@ -62,10 +75,10 @@ function App() {
         <Route path="/settings" element={<><Header /><SettingsLayout /><Footer /></>}>
           <Route path="profile" element={<ProfileSettings />} />
           <Route path="account" element={<AccountSettings />} />
-          <Route path="security" element={<SecuritySettings />} />
+          <Route path="security" element={<UserSecuritySettings />} />
           <Route path="notifications" element={<NotificationSettings />} />
-          <Route path="privacy" element={<div className="p-8 text-center text-gray-500">Gizlilik Ayarları - Yakında</div>} />
-          <Route path="appearance" element={<div className="p-8 text-center text-gray-500">Görünüm - Yakında</div>} />
+          <Route path="privacy" element={<PrivacySettings />} />
+          <Route path="appearance" element={<AppearanceSettings />} />
         </Route>
         
         {/* Admin Routes (With Sidebar) */}
@@ -74,12 +87,23 @@ function App() {
           <Route path="analytics" element={<AnalyticsDashboard />} />
           <Route path="users" element={<UserManagement />} />
           <Route path="posts" element={<PostModeration />} />
+          <Route path="comments" element={<CommentModeration />} />
+          <Route path="media" element={<MediaManagement />} />
           <Route path="algorithm" element={<AlgorithmSettings />} />
           <Route path="site-settings" element={<SiteSettings />} />
           <Route path="theme" element={<ThemeEditor />} />
           <Route path="seo" element={<SEOSettings />} />
+          <Route path="email" element={<EmailTemplates />} />
+          <Route path="notifications" element={<NotificationRules />} />
           <Route path="automation" element={<AutomationControl />} />
+          <Route path="scraping" element={<ScrapingManagement />} />
+          <Route path="sources" element={<SourceManagement />} />
           <Route path="ads" element={<AdsManagement />} />
+          <Route path="payments" element={<PaymentSystem />} />
+          <Route path="revenue" element={<RevenueAnalysis />} />
+          <Route path="security" element={<SecuritySettings />} />
+          <Route path="database" element={<DatabaseManagement />} />
+          <Route path="api" element={<APISettings />} />
         </Route>
       </Routes>
       
