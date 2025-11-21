@@ -1,7 +1,7 @@
 import { Users, Building2, MapPin, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export const PartyDetailPopup = ({ party, onClose, position }) => {
+export const PartyDetailPopup = ({ party, onClose, position, onMouseEnter }) => {
   const navigate = useNavigate();
   
   if (!party) return null;
@@ -14,13 +14,11 @@ export const PartyDetailPopup = ({ party, onClose, position }) => {
   
   return (
     <>
-      {/* Backdrop - sadece tıklanınca kapat */}
       <div 
         className="fixed inset-0 z-40"
         onClick={onClose}
       />
       
-      {/* Popup */}
       <div 
         className="fixed z-50 bg-white rounded-lg shadow-2xl border-2 border-gray-200 p-4 w-80"
         style={{
@@ -29,9 +27,8 @@ export const PartyDetailPopup = ({ party, onClose, position }) => {
           transform: !position?.x ? 'translate(-50%, -50%)' : 'none'
         }}
         onClick={(e) => e.stopPropagation()}
-        onMouseLeave={onClose}
+        onMouseEnter={onMouseEnter}
       >
-        {/* Başlık */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             {party.party_logo && (
@@ -54,9 +51,7 @@ export const PartyDetailPopup = ({ party, onClose, position }) => {
           </div>
         </div>
         
-        {/* Detaylar */}
         <div className="space-y-3">
-          {/* Milletvekili Sayısı */}
           <button
             onClick={(e) => handleNavigation(`/party/${party.party_id}?tab=mps`, e)}
             className="w-full flex items-center justify-between p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group"
@@ -72,7 +67,6 @@ export const PartyDetailPopup = ({ party, onClose, position }) => {
             </span>
           </button>
           
-          {/* Büyükşehir Belediye Sayısı */}
           <button
             onClick={(e) => handleNavigation(`/party/${party.party_id}?tab=metropolitan`, e)}
             className="w-full flex items-center justify-between p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
@@ -88,7 +82,6 @@ export const PartyDetailPopup = ({ party, onClose, position }) => {
             </span>
           </button>
           
-          {/* İlçe Belediye Sayısı */}
           <button
             onClick={(e) => handleNavigation(`/party/${party.party_id}?tab=district`, e)}
             className="w-full flex items-center justify-between p-3 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors group"
@@ -104,7 +97,6 @@ export const PartyDetailPopup = ({ party, onClose, position }) => {
             </span>
           </button>
           
-          {/* Gündeme Katkı */}
           <button
             onClick={(e) => handleNavigation(`/party/${party.party_id}?tab=agendas`, e)}
             className="w-full flex items-center justify-between p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group"
@@ -121,7 +113,6 @@ export const PartyDetailPopup = ({ party, onClose, position }) => {
           </button>
         </div>
         
-        {/* Ana Profil Butonu */}
         <button
           onClick={(e) => handleNavigation(`/party/${party.party_id}`, e)}
           className="w-full mt-4 bg-primary-blue hover:bg-[#0088bb] text-white font-bold py-2 px-4 rounded-lg transition-colors"
