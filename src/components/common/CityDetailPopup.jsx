@@ -1,7 +1,7 @@
 import { Users, Building2, MapPin, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
+export const CityDetailPopup = ({ cityCode, cityName, onClose, position, onMouseEnter }) => {
   const navigate = useNavigate();
   
   if (!cityCode) return null;
@@ -12,7 +12,6 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
     onClose();
   };
   
-  // Mock data - gerçek data ile değiştirilecek
   const cityData = {
     mp_count: Math.floor(Math.random() * 20) + 1,
     metropolitan_mayor: Math.random() > 0.7 ? 'Var' : 'Yok',
@@ -22,13 +21,11 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
   
   return (
     <>
-      {/* Backdrop - sadece tıklanınca kapat */}
       <div 
         className="fixed inset-0 z-40"
         onClick={onClose}
       />
       
-      {/* Popup */}
       <div 
         className="fixed z-50 bg-white rounded-lg shadow-2xl border-2 border-gray-200 p-4 w-80"
         style={{
@@ -37,9 +34,8 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
           transform: !position?.x ? 'translate(-50%, -50%)' : 'none'
         }}
         onClick={(e) => e.stopPropagation()}
-        onMouseLeave={onClose}
+        onMouseEnter={onMouseEnter}
       >
-        {/* Başlık */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-sm">
@@ -52,9 +48,7 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
           </div>
         </div>
         
-        {/* Detaylar */}
         <div className="space-y-3">
-          {/* Milletvekili Sayısı */}
           <button
             onClick={(e) => handleNavigation(`/city/${cityCode}?tab=mps`, e)}
             className="w-full flex items-center justify-between p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group"
@@ -70,7 +64,6 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
             </span>
           </button>
           
-          {/* Büyükşehir Belediyesi */}
           <button
             onClick={(e) => handleNavigation(`/city/${cityCode}?tab=metropolitan`, e)}
             className="w-full flex items-center justify-between p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
@@ -86,7 +79,6 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
             </span>
           </button>
           
-          {/* İlçe Sayısı */}
           <button
             onClick={(e) => handleNavigation(`/city/${cityCode}?tab=districts`, e)}
             className="w-full flex items-center justify-between p-3 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors group"
@@ -102,7 +94,6 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
             </span>
           </button>
           
-          {/* Paylaşım Sayısı */}
           <button
             onClick={(e) => handleNavigation(`/city/${cityCode}?tab=posts`, e)}
             className="w-full flex items-center justify-between p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group"
@@ -119,7 +110,6 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
           </button>
         </div>
         
-        {/* Ana Profil Butonu */}
         <button
           onClick={(e) => handleNavigation(`/city/${cityCode}`, e)}
           className="w-full mt-4 bg-primary-blue hover:bg-[#0088bb] text-white font-bold py-2 px-4 rounded-lg transition-colors"
