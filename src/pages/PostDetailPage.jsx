@@ -24,7 +24,13 @@ export const PostDetailPage = () => {
     const foundPost = allPosts.find(p => p.post_id === parseInt(postId));
     setPost(foundPost);
     
-    const postComments = generateMockComments(20).filter(c => c.post_id === parseInt(postId));
+    // Her post için 8-10 yorum garantile
+    const commentCount = Math.floor(Math.random() * 3) + 8; // 8, 9 veya 10 yorum
+    const postComments = generateMockComments(commentCount).map((comment, index) => ({
+      ...comment,
+      comment_id: parseInt(postId) * 1000 + index,
+      post_id: parseInt(postId)
+    }));
     setComments(postComments);
   }, [postId]);
   
@@ -96,12 +102,12 @@ export const PostDetailPage = () => {
             
             {/* Etkileşim Butonları */}
             <div className="flex items-center gap-6 pt-4 border-t">
-              {/* ÖZEL BÜYÜK BEĞENİ BUTONU */}
-              <button className="flex items-center gap-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                <Heart className="w-8 h-8" fill="currentColor" />
-                <div className="text-left">
-                  <div className="text-2xl font-bold">{formatNumber(post.like_count)}</div>
-                  <div className="text-sm font-medium">Beğeni</div>
+              {/* ÖZEL BÜYÜK BEĞEN BUTONU */}
+              <button className="flex flex-col items-center gap-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-12 py-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110">
+                <Heart className="w-16 h-16" fill="currentColor" />
+                <div className="text-3xl font-black tracking-wider">BEĞEN</div>
+                <div className="text-xl font-bold bg-white/20 px-4 py-1 rounded-full">
+                  {formatNumber(post.like_count)}
                 </div>
               </button>
               
