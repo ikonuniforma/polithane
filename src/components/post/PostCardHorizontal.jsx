@@ -47,7 +47,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
       style={fullWidth ? {} : { scrollSnapAlign: 'start', ...style }}
       onClick={() => navigate(`/post/${post.post_id}`)}
     >
-      {/* Parti Logosu - SAĞ ÜST KÖŞE - Responsive */}
+      {/* Parti Logosu - SAĞ ÜST KÖŞE - %40 Büyütülmüş */}
       {post.user?.party_id && post.user?.party?.party_logo && (
         <div 
           className="absolute top-3 right-3 z-10 cursor-pointer hover:scale-110 transition-transform"
@@ -60,7 +60,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
           <img 
             src={post.user.party.party_logo} 
             alt={post.user.party.party_short_name}
-            className="w-4 h-4 sm:w-5 sm:h-5 md:w-[20px] md:h-[20px] object-contain drop-shadow-md"
+            className="w-[22px] h-[22px] sm:w-[24px] sm:h-[24px] md:w-[28px] md:h-[28px] object-contain drop-shadow-md"
             onError={(e) => {
               e.target.style.display = 'none';
             }}
@@ -71,19 +71,33 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
       {/* Üst Bilgi */}
       <div className="flex items-start justify-between mb-3 pr-8">
         <div className="flex items-start gap-2 flex-1 min-w-0">
-          <div 
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/profile/${post.user?.user_id}`);
-            }}
-            className="cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
-          >
-            <Avatar 
-              src={getAvatarUrl(post.user?.profile_image)} 
-              size="32px" 
-              verified={post.user?.verification_badge}
-            />
+          {/* Avatar ve Plaka Kodu */}
+          <div className="flex flex-col items-center gap-1 flex-shrink-0">
+            <div 
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/profile/${post.user?.user_id}`);
+              }}
+              className="cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <Avatar 
+                src={getAvatarUrl(post.user?.profile_image)} 
+                size="32px" 
+                verified={post.user?.verification_badge}
+              />
+            </div>
+            {/* Plaka Kodu - Avatar altında */}
+            {post.user?.city_code && (
+              <Link
+                to={`/city/${post.user.city_code}`}
+                className="inline-flex items-center justify-center px-1.5 py-0.5 bg-gray-900 hover:bg-primary-blue text-white text-[9px] font-bold rounded-full transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {post.user.city_code}
+              </Link>
+            )}
           </div>
+          
           <div className="flex-1 min-w-0">
             {/* İsim - Her zaman 2 satırlık alan (SABİT YÜKSEKLİK) */}
             <h3 
@@ -96,46 +110,29 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
               {post.user?.full_name}
             </h3>
             
-            {/* Ünvan ve İl Kodu - Tek satır */}
+            {/* Ünvan - Tek satır */}
             <div className="flex items-center gap-1.5 mb-0.5">
               {getUserTitle(post.user, true) && (
-                <>
-                  <span 
-                    className="font-medium text-primary-blue cursor-pointer hover:underline text-[10px] whitespace-nowrap"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (post.user?.user_type === 'politician' && post.user?.politician_type === 'mp') {
-                        navigate('/category/mps');
-                      } else if (post.user?.user_type === 'politician') {
-                        navigate('/category/organization');
-                      } else if (post.user?.user_type === 'ex_politician') {
-                        navigate('/category/experience');
-                      } else if (post.user?.user_type === 'media') {
-                        navigate('/category/media');
-                      } else {
-                        navigate('/category/citizens');
-                      }
-                    }}
-                  >
-                    {getUserTitle(post.user, true)}
-                  </span>
-                  {/* İl kodu - Görevin yanında */}
-                  {post.user?.city_code && (
-                    <Link
-                      to={`/city/${post.user.city_code}`}
-                      className="inline-flex items-center justify-center px-1.5 py-0.5 bg-gray-900 hover:bg-primary-blue text-white text-[10px] font-bold rounded-full transition-colors"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {post.user.city_code}
-                    </Link>
-                  )}
-                </>
+                <span 
+                  className="font-medium text-primary-blue cursor-pointer hover:underline text-[10px] whitespace-nowrap"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (post.user?.user_type === 'politician' && post.user?.politician_type === 'mp') {
+                      navigate('/category/mps');
+                    } else if (post.user?.user_type === 'politician') {
+                      navigate('/category/organization');
+                    } else if (post.user?.user_type === 'ex_politician') {
+                      navigate('/category/experience');
+                    } else if (post.user?.user_type === 'media') {
+                      navigate('/category/media');
+                    } else {
+                      navigate('/category/citizens');
+                    }
+                  }}
+                >
+                  {getUserTitle(post.user, true)}
+                </span>
               )}
-            </div>
-            
-            {/* Paylaşım Zamanı - Alt satır */}
-            <div className="text-[10px] text-gray-500">
-              {formatTimeAgo(post.created_at)}
             </div>
           </div>
         </div>
@@ -386,19 +383,24 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
           </div>
         )}
         
-        {/* Polit Puan */}
-        <div 
-          className="mb-2 cursor-pointer hover:scale-105 transition-transform inline-block"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowScoreModal(true);
-          }}
-          title="Polit Puan detaylarını gör"
-        >
-          <div className="flex items-center gap-2">
+        {/* Polit Puan ve Paylaşım Zamanı - Yan yana */}
+        <div className="mb-2 flex items-center justify-between">
+          <div 
+            className="cursor-pointer hover:scale-105 transition-transform inline-block"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowScoreModal(true);
+            }}
+            title="Polit Puan detaylarını gör"
+          >
             <span className="text-lg font-bold text-primary-blue hover:text-blue-700">
               {formatPolitScore(post.polit_score)}
             </span>
+          </div>
+          
+          {/* Paylaşım Zamanı - Sağ tarafta */}
+          <div className="text-[10px] text-gray-500">
+            {formatTimeAgo(post.created_at)}
           </div>
         </div>
       </div>

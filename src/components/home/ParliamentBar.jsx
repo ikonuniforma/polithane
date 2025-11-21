@@ -64,12 +64,17 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
               }}
               onClick={() => navigate(`/party/${index + 1}`)}
               onMouseEnter={(e) => {
+                if (partyHoverTimeout.current) {
+                  clearTimeout(partyHoverTimeout.current);
+                }
                 const rect = e.currentTarget.getBoundingClientRect();
                 setPopupPosition({ x: rect.left, y: rect.bottom });
                 setHoveredParty(partyData);
               }}
               onMouseLeave={() => {
-                setHoveredParty(null);
+                partyHoverTimeout.current = setTimeout(() => {
+                  setHoveredParty(null);
+                }, 150);
               }}
             >
               {/* Parti kısa adı - sadece yeterince geniş alanlarda göster (yazı sığıyorsa) */}
@@ -122,12 +127,17 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
                 onClick={() => navigate(`/city/${cityCode}`)}
                 className="w-[15px] h-[15px] rounded-full bg-gray-900 hover:bg-primary-blue text-white text-[7px] font-bold flex items-center justify-center transition-colors flex-shrink-0 leading-none"
                 onMouseEnter={(e) => {
+                  if (cityHoverTimeout.current) {
+                    clearTimeout(cityHoverTimeout.current);
+                  }
                   const rect = e.currentTarget.getBoundingClientRect();
                   setPopupPosition({ x: rect.left, y: rect.bottom });
                   setHoveredCity({ code: cityCode, name: cityNames[cityCode] });
                 }}
                 onMouseLeave={() => {
-                  setHoveredCity(null);
+                  cityHoverTimeout.current = setTimeout(() => {
+                    setHoveredCity(null);
+                  }, 150);
                 }}
               >
                 {code}
@@ -139,21 +149,43 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
       
       {/* Parti Detay Popup */}
       {hoveredParty && (
-        <PartyDetailPopup 
-          party={hoveredParty}
-          position={popupPosition}
-          onClose={() => setHoveredParty(null)}
-        />
+        <div
+          onMouseEnter={() => {
+            if (partyHoverTimeout.current) {
+              clearTimeout(partyHoverTimeout.current);
+            }
+          }}
+          onMouseLeave={() => {
+            setHoveredParty(null);
+          }}
+        >
+          <PartyDetailPopup 
+            party={hoveredParty}
+            position={popupPosition}
+            onClose={() => setHoveredParty(null)}
+          />
+        </div>
       )}
       
       {/* İl Detay Popup */}
       {hoveredCity && (
-        <CityDetailPopup 
-          cityCode={hoveredCity.code}
-          cityName={hoveredCity.name}
-          position={popupPosition}
-          onClose={() => setHoveredCity(null)}
-        />
+        <div
+          onMouseEnter={() => {
+            if (cityHoverTimeout.current) {
+              clearTimeout(cityHoverTimeout.current);
+            }
+          }}
+          onMouseLeave={() => {
+            setHoveredCity(null);
+          }}
+        >
+          <CityDetailPopup 
+            cityCode={hoveredCity.code}
+            cityName={hoveredCity.name}
+            position={popupPosition}
+            onClose={() => setHoveredCity(null)}
+          />
+        </div>
       )}
     </div>
   );
