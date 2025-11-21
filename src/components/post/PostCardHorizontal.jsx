@@ -85,9 +85,9 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
             />
           </div>
           <div className="flex-1 min-w-0">
-            {/* İsim - Her zaman 2 satırlık alan */}
+            {/* İsim - Her zaman 2 satırlık alan (SABİT YÜKSEKLİK) */}
             <h3 
-              className="font-semibold text-sm text-gray-900 cursor-pointer hover:text-primary-blue transition-colors line-clamp-2 leading-[18px] mb-1"
+              className="font-semibold text-sm text-gray-900 cursor-pointer hover:text-primary-blue transition-colors line-clamp-2 leading-[18px] h-[36px] mb-1"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/profile/${post.user?.user_id}`);
@@ -345,8 +345,8 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
           </p>
         )}
         
-        {/* REKLAM ALANI - İçerik ile gündem arasında (full width x 20px) */}
-        <div className="w-full h-[20px] mb-2 overflow-hidden rounded-md">
+        {/* REKLAM ALANI - İçerik ile gündem arasında (full width x 120px) */}
+        <div className="w-full h-[120px] mb-2 overflow-hidden rounded-md">
           <div 
             className="w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-purple-600 hover:via-pink-600 hover:to-red-600 cursor-pointer flex items-center justify-center transition-all duration-300"
             onClick={(e) => {
@@ -356,7 +356,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
               window.open(randomAd, '_blank');
             }}
           >
-            <p className="text-white font-bold text-[10px]">🎯 Sponsorlu İçerik</p>
+            <p className="text-white font-bold text-sm">🎯 Sponsorlu İçerik</p>
           </div>
         </div>
       </div>
