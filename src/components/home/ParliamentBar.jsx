@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPartyFlagPath } from '../../utils/imagePaths';
 import { PartyDetailPopup } from '../common/PartyDetailPopup';
@@ -9,20 +9,24 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
   const [hoveredParty, setHoveredParty] = useState(null);
   const [hoveredCity, setHoveredCity] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const closeTimeoutRef = useRef(null);
   
   if (!parliamentData || parliamentData.length === 0) return null;
+  
+  const clearCloseTimeout = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  };
   
   return (
     <div className="mb-4 hidden md:block">
       <div className="flex h-24 overflow-hidden rounded-t-lg border border-gray-300 w-full">
         {parliamentData.map((party, index) => {
-          // Genişlik yüzdesi = (sandalye sayısı / toplam sandalye) * 100
           const widthPercentage = (party.seats / totalSeats) * 100;
-          
-          // Parti bayrağı/logosu path'i
           const flagPath = getPartyFlagPath(party.shortName, index + 1);
           
-          // Logo path düzeltmesi - kısa isimlere göre mapping
           const logoMap = {
             'AK PARTİ': 'ak_parti.png',
             'CHP': 'chp.png',
@@ -41,9 +45,9 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
             party_color: party.color,
             seats: party.seats,
             mp_count: party.seats,
-            metropolitan_count: Math.floor(Math.random() * 15) + 1, // Mock data
-            district_count: Math.floor(Math.random() * 200) + 10, // Mock data
-            agenda_contribution: Math.floor(Math.random() * 5000) + 100 // Mock data
+            metropolitan_count: Math.floor(Math.random() * 15) + 1,
+            district_count: Math.floor(Math.random() * 200) + 10,
+            agenda_contribution: Math.floor(Math.random() * 5000) + 100
           };
           
           return (
@@ -57,23 +61,22 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
-                minWidth: '20px', // Çok küçük partiler için minimum genişlik
+                minWidth: '20px',
                 flexShrink: 0
               }}
               onClick={() => navigate(`/party/${index + 1}`)}
               onMouseEnter={(e) => {
+                clearCloseTimeout();
                 const rect = e.currentTarget.getBoundingClientRect();
                 setPopupPosition({ x: rect.left, y: rect.bottom });
                 setHoveredParty(partyData);
               }}
               onMouseLeave={() => {
-                // Küçük delay ile başka bayrak/plakaya geçişe izin ver
-                setTimeout(() => {
+                closeTimeoutRef.current = setTimeout(() => {
                   setHoveredParty(null);
-                }, 100);
+                }, 150);
               }}
             >
-              {/* Parti kısa adı - sadece yeterince geniş alanlarda göster (yazı sığıyorsa) */}
               {widthPercentage > 5 && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span 
@@ -91,13 +94,11 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
         })}
       </div>
       
-      {/* Plaka Kodları - 1'den 81'e kadar (TEK SATIR - TAMAMEN BİTİŞİK) */}
       <div className="bg-gray-50 px-2 py-2 rounded-b-lg border border-t-0 border-gray-300 overflow-x-auto">
         <div className="flex gap-0 justify-center">
           {Array.from({ length: 81 }, (_, i) => {
             const code = i + 1;
             const cityCode = code.toString().padStart(2, '0');
-            // Şehir isimleri - basit mapping
             const cityNames = {
               '01': 'Adana', '02': 'Adıyaman', '03': 'Afyonkarahisar', '04': 'Ağrı', '05': 'Amasya',
               '06': 'Ankara', '07': 'Antalya', '08': 'Artvin', '09': 'Aydın', '10': 'Balıkesir',
@@ -123,15 +124,15 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
                 onClick={() => navigate(`/city/${cityCode}`)}
                 className="w-[15px] h-[15px] rounded-full bg-gray-900 hover:bg-primary-blue text-white text-[7px] font-bold flex items-center justify-center transition-colors flex-shrink-0 leading-none"
                 onMouseEnter={(e) => {
+                  clearCloseTimeout();
                   const rect = e.currentTarget.getBoundingClientRect();
                   setPopupPosition({ x: rect.left, y: rect.bottom });
                   setHoveredCity({ code: cityCode, name: cityNames[cityCode] });
                 }}
                 onMouseLeave={() => {
-                  // Küçük delay ile başka bayrak/plakaya geçişe izin ver
-                  setTimeout(() => {
+                  closeTimeoutRef.current = setTimeout(() => {
                     setHoveredCity(null);
-                  }, 100);
+                  }, 150);
                 }}
               >
                 {code}
@@ -141,22 +142,22 @@ export const ParliamentBar = ({ parliamentData = [], totalSeats = 600 }) => {
         </div>
       </div>
       
-      {/* Parti Detay Popup */}
       {hoveredParty && (
         <PartyDetailPopup 
           party={hoveredParty}
           position={popupPosition}
           onClose={() => setHoveredParty(null)}
+          onMouseEnter={clearCloseTimeout}
         />
       )}
       
-      {/* İl Detay Popup */}
       {hoveredCity && (
         <CityDetailPopup 
           cityCode={hoveredCity.code}
           cityName={hoveredCity.name}
           position={popupPosition}
           onClose={() => setHoveredCity(null)}
+          onMouseEnter={clearCloseTimeout}
         />
       )}
     </div>
