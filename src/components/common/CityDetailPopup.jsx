@@ -22,11 +22,10 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
   
   return (
     <>
-      {/* Backdrop - mouse gelince veya tıklanınca kapat */}
+      {/* Backdrop - sadece tıklanınca kapat */}
       <div 
         className="fixed inset-0 z-40"
         onClick={onClose}
-        onMouseMove={onClose}
       />
       
       {/* Popup */}
@@ -38,7 +37,7 @@ export const CityDetailPopup = ({ cityCode, cityName, onClose, position }) => {
           transform: !position?.x ? 'translate(-50%, -50%)' : 'none'
         }}
         onClick={(e) => e.stopPropagation()}
-        onMouseEnter={(e) => e.stopPropagation()}
+        onMouseLeave={onClose}
       >
         {/* Başlık */}
         <div className="flex items-center justify-between mb-4">
