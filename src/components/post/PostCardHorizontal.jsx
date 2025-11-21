@@ -345,8 +345,8 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
           </p>
         )}
         
-        {/* REKLAM ALANI - İçerik ile gündem arasında (full width x 120px) */}
-        <div className="w-full h-[120px] mb-2 overflow-hidden rounded-md">
+        {/* REKLAM ALANI - İçerik ile gündem arasında (full width x 35px) */}
+        <div className="w-full h-[35px] mb-2 overflow-hidden rounded-md">
           <div 
             className="w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-purple-600 hover:via-pink-600 hover:to-red-600 cursor-pointer flex items-center justify-center transition-all duration-300"
             onClick={(e) => {
@@ -356,7 +356,7 @@ export const PostCardHorizontal = ({ post, showCity = false, showPartyLogo = fal
               window.open(randomAd, '_blank');
             }}
           >
-            <p className="text-white font-bold text-sm">🎯 Sponsorlu İçerik</p>
+            <p className="text-white font-bold text-[11px]">🎯 Sponsorlu İçerik</p>
           </div>
         </div>
       </div>
