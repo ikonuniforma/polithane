@@ -139,17 +139,18 @@ export const HomePage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_200px] gap-4 lg:pr-0">
           {/* Sol Ana Kolon */}
           <div className="space-y-8 min-w-0">
-            {/* MOBİL: Sadece Aktif Kategori */}
+            {/* MOBİL: Sadece Aktif Kategori - 2'Lİ GRİD */}
             <div className="md:hidden">
               {activeTab && (
-                <section className="min-w-0 rounded-lg p-4" style={{ backgroundColor: activeTab.color }}>
-                  <div className="flex items-center justify-between mb-4">
+                <section className="min-w-0 rounded-lg p-2" style={{ backgroundColor: activeTab.color }}>
+                  <div className="flex items-center justify-between mb-4 px-2">
                     <h2 className="text-xl font-bold text-gray-900">
                       {activeTab.id === 'all' ? 'TÜM İÇERİKLER' : `${activeTab.name.toUpperCase()} KONUŞUYOR`}
                     </h2>
                   </div>
-                  <div className="space-y-4">
-                    {activeTab.posts.slice(0, 10).map(post => (
+                  {/* 2'li Grid Layout - Dikey Scroll */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {activeTab.posts.slice(0, 20).map(post => (
                       <PostCardHorizontal 
                         key={post.post_id} 
                         post={post}
