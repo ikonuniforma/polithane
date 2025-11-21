@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { MoreVertical, Ban, AlertCircle, MessageCircle } from 'lucide-react';
+import { useParams, Link } from 'react-router-dom';
+import { MoreVertical, Ban, AlertCircle, MessageCircle, Settings, Edit } from 'lucide-react';
 import { Avatar } from '../components/common/Avatar';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
@@ -13,9 +13,11 @@ import { getUserTitle } from '../utils/titleHelpers';
 import { mockUsers } from '../mock/users';
 import { mockPosts } from '../mock/posts';
 import { getFollowStats, mockBlockedUsers } from '../mock/follows';
+import { useAuth } from '../contexts/AuthContext';
 
 export const ProfilePage = () => {
   const { userId } = useParams();
+  const { user: currentUser } = useAuth();
   const [user, setUser] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
   const [activeTab, setActiveTab] = useState('posts');
@@ -25,7 +27,7 @@ export const ProfilePage = () => {
   const [showBlockModal, setShowBlockModal] = useState(false);
   const [followStats, setFollowStats] = useState({ followers_count: 0, following_count: 0 });
   
-  const isOwnProfile = userId === 'currentUser' || parseInt(userId) === 'currentUser';
+  const isOwnProfile = currentUser && (parseInt(userId) === currentUser.user_id || userId === 'me');
   const isBlocked = mockBlockedUsers.some(b => 
     (b.blocker_id === 'currentUser' && b.blocked_id === parseInt(userId)) ||
     (b.blocked_id === 'currentUser' && b.blocker_id === parseInt(userId))
@@ -130,7 +132,20 @@ export const ProfilePage = () => {
             {/* Aksiyon Butonları */}
             <div className="flex items-center gap-2">
               {isOwnProfile ? (
-                <Button variant="outline">Profili Düzenle</Button>
+                <>
+                  <Link to="/settings/profile">
+                    <Button variant="outline">
+                      <Edit className="w-4 h-4 mr-2" />
+                      Profili Düzenle
+                    </Button>
+                  </Link>
+                  <Link to="/settings">
+                    <Button variant="outline">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Ayarlar
+                    </Button>
+                  </Link>
+                </>
               ) : isBlocked ? (
                 <Button variant="outline" disabled>Engellenmiş</Button>
               ) : (
