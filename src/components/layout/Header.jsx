@@ -136,13 +136,21 @@ export const Header = () => {
               </div>
             </>
           ) : (
-            <button
-              onClick={() => navigate('/login-new')}
-              className="flex items-center gap-2 px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>Giriş Yap</span>
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate('/register-new')}
+                className="px-4 py-2 text-primary-blue font-semibold hover:bg-blue-50 rounded-lg transition-colors"
+              >
+                Kayıt Ol
+              </button>
+              <button
+                onClick={() => navigate('/login-new')}
+                className="flex items-center gap-2 px-4 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Giriş Yap</span>
+              </button>
+            </div>
           )}
         </div>
       </div>
