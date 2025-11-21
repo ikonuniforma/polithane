@@ -96,10 +96,15 @@ export const PostDetailPage = () => {
             
             {/* Etkileşim Butonları */}
             <div className="flex items-center gap-6 pt-4 border-t">
-              <button className="flex items-center gap-2 text-gray-600 hover:text-red-500">
-                <Heart className="w-5 h-5" />
-                <span>{formatNumber(post.like_count)}</span>
+              {/* ÖZEL BÜYÜK BEĞENİ BUTONU */}
+              <button className="flex items-center gap-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <Heart className="w-8 h-8" fill="currentColor" />
+                <div className="text-left">
+                  <div className="text-2xl font-bold">{formatNumber(post.like_count)}</div>
+                  <div className="text-sm font-medium">Beğeni</div>
+                </div>
               </button>
+              
               <button className="flex items-center gap-2 text-gray-600 hover:text-primary-blue">
                 <MessageCircle className="w-5 h-5" />
                 <span>{formatNumber(post.comment_count)}</span>
@@ -112,12 +117,11 @@ export const PostDetailPage = () => {
               </button>
             </div>
             
-            {/* Polit Puan */}
+            {/* Polit Puan - Sadece P. ile */}
             <div className="mt-4 pt-4 border-t">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-3xl font-bold text-primary-blue">{formatPolitScore(post.polit_score)}</div>
-                  <div className="text-sm text-gray-500">Polit Puan</div>
                 </div>
                 <Button variant="outline" onClick={() => setShowScoreModal(true)}>
                   Detaylı Hesaplama
