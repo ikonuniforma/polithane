@@ -71,7 +71,7 @@ export const PostDetailPage = () => {
             {/* İçerik */}
             <div className="mb-4">
               {post.content_type === 'text' && (
-                <p className="text-gray-800 text-lg whitespace-pre-wrap">{post.content_text}</p>
+                <p className="text-gray-900 text-2xl leading-relaxed font-medium whitespace-pre-wrap">{post.content_text}</p>
               )}
               {post.content_type === 'image' && (
                 <div>
