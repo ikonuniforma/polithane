@@ -11,6 +11,7 @@ import { mockParties } from '../mock/parties';
 import { mockAgendas } from '../mock/agendas';
 import { mockUsers } from '../mock/users';
 import { currentParliamentDistribution, totalSeats } from '../data/parliamentDistribution';
+import { filterConsecutiveTextAudio, filterGridTextAudio } from '../utils/postFilters';
 
 export const HomePage = () => {
   const [posts, setPosts] = useState([]);
@@ -148,9 +149,9 @@ export const HomePage = () => {
                       {activeTab.id === 'all' ? 'TÜM İÇERİKLER' : `${activeTab.name.toUpperCase()} KONUŞUYOR`}
                     </h2>
                   </div>
-                  {/* 2'li Grid Layout - Dikey Scroll */}
+                  {/* 2'li Grid Layout - Dikey Scroll (DEMO: Her satırda max 1 metin/ses) */}
                   <div className="grid grid-cols-2 gap-2">
-                    {activeTab.posts.slice(0, 20).map(post => (
+                    {filterGridTextAudio(activeTab.posts.slice(0, 20), 2, true).map(post => (
                       <PostCardHorizontal 
                         key={post.post_id} 
                         post={post}
@@ -184,7 +185,7 @@ export const HomePage = () => {
                   scrollInterval={4000}
                   itemsPerView={{ desktop: 5, tablet: 3, mobile: 2 }}
                 >
-                  {allPosts.slice(0, 30).map(post => (
+                  {filterConsecutiveTextAudio(allPosts.slice(0, 30), true).map(post => (
                     <PostCardHorizontal 
                       key={post.post_id} 
                       post={post}
@@ -208,7 +209,7 @@ export const HomePage = () => {
                 scrollInterval={5000}
                 itemsPerView={{ desktop: 5, tablet: 3, mobile: 2 }}
               >
-                {mpPosts.map(post => (
+                {filterConsecutiveTextAudio(mpPosts, true).map(post => (
                   <PostCardHorizontal 
                     key={post.post_id} 
                     post={post}
@@ -232,7 +233,7 @@ export const HomePage = () => {
                 scrollInterval={5000}
                 itemsPerView={{ desktop: 5, tablet: 3, mobile: 2 }}
               >
-                {organizationPosts.map(post => (
+                {filterConsecutiveTextAudio(organizationPosts, true).map(post => (
                   <PostCardHorizontal 
                     key={post.post_id} 
                     post={post}
@@ -255,7 +256,7 @@ export const HomePage = () => {
                 scrollInterval={5000}
                 itemsPerView={{ desktop: 5, tablet: 3, mobile: 2 }}
               >
-                {citizenPosts.map(post => (
+                {filterConsecutiveTextAudio(citizenPosts, true).map(post => (
                   <PostCardHorizontal 
                     key={post.post_id} 
                     post={post}
@@ -277,7 +278,7 @@ export const HomePage = () => {
                 scrollInterval={5000}
                 itemsPerView={{ desktop: 5, tablet: 3, mobile: 2 }}
               >
-                {exPoliticianPosts.map(post => (
+                {filterConsecutiveTextAudio(exPoliticianPosts, true).map(post => (
                   <PostCardHorizontal 
                     key={post.post_id} 
                     post={post}

@@ -100,26 +100,41 @@ export const PostDetailPage = () => {
               </Badge>
             )}
             
-            {/* Etkileşim Butonları */}
-            <div className="flex items-center gap-6 pt-4 border-t">
-              {/* ÖZEL BÜYÜK BEĞEN BUTONU */}
-              <button className="flex flex-col items-center gap-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-12 py-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-110">
-                <Heart className="w-16 h-16" fill="currentColor" />
-                <div className="text-3xl font-black tracking-wider">BEĞEN</div>
-                <div className="text-xl font-bold bg-white/20 px-4 py-1 rounded-full">
+            {/* Etkileşim Butonları - Yeniden Tasarım */}
+            <div className="grid grid-cols-3 gap-3 pt-4 border-t">
+              {/* BEĞEN - Özel Vurgulu */}
+              <button className="flex flex-col items-center gap-2 bg-gradient-to-br from-red-500 via-pink-500 to-red-600 hover:from-red-600 hover:via-pink-600 hover:to-red-700 text-white py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <Heart className="w-10 h-10" fill="currentColor" />
+                <div className="text-lg font-bold">BEĞEN</div>
+                <div className="text-sm font-semibold bg-white/30 px-3 py-0.5 rounded-full">
                   {formatNumber(post.like_count)}
                 </div>
               </button>
               
-              <button className="flex items-center gap-2 text-gray-600 hover:text-primary-blue">
-                <MessageCircle className="w-5 h-5" />
-                <span>{formatNumber(post.comment_count)}</span>
+              {/* YORUM */}
+              <button className="flex flex-col items-center gap-2 bg-gradient-to-br from-primary-blue to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <MessageCircle className="w-10 h-10" />
+                <div className="text-lg font-bold">YORUM</div>
+                <div className="text-sm font-semibold bg-white/30 px-3 py-0.5 rounded-full">
+                  {formatNumber(post.comment_count)}
+                </div>
               </button>
-              <button className="flex items-center gap-2 text-gray-600 hover:text-primary-blue">
-                <Share2 className="w-5 h-5" />
+              
+              {/* PAYLAŞ */}
+              <button className="flex flex-col items-center gap-2 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <Share2 className="w-10 h-10" />
+                <div className="text-lg font-bold">PAYLAŞ</div>
+                <div className="text-sm font-semibold bg-white/30 px-3 py-0.5 rounded-full">
+                  {formatNumber(post.share_count || 0)}
+                </div>
               </button>
-              <button className="flex items-center gap-2 text-gray-600 hover:text-red-500 ml-auto">
-                <Flag className="w-5 h-5" />
+            </div>
+            
+            {/* Şikayet Et - Alt Satırda */}
+            <div className="flex justify-end mt-3">
+              <button className="flex items-center gap-2 text-gray-500 hover:text-red-500 text-sm font-medium transition-colors">
+                <Flag className="w-4 h-4" />
+                Şikayet Et
               </button>
             </div>
             
