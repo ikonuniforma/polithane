@@ -6,7 +6,7 @@ import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
 import { Modal } from '../components/common/Modal';
 import { formatNumber, formatPolitScore, formatTimeAgo, formatDate, formatDuration } from '../utils/formatters';
-import { mockPosts } from '../mock/posts';
+import { generateMockPosts } from '../mock/posts';
 import { mockComments, generateMockComments } from '../mock/comments';
 import ReactPlayer from 'react-player';
 
@@ -19,7 +19,9 @@ export const PostDetailPage = () => {
   const [newComment, setNewComment] = useState('');
   
   useEffect(() => {
-    const foundPost = mockPosts.find(p => p.post_id === parseInt(postId));
+    // Tüm postları generate et (400 post)
+    const allPosts = generateMockPosts(400);
+    const foundPost = allPosts.find(p => p.post_id === parseInt(postId));
     setPost(foundPost);
     
     const postComments = generateMockComments(20).filter(c => c.post_id === parseInt(postId));
