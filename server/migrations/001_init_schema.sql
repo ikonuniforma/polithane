@@ -3,6 +3,46 @@
 -- Description: Initial database structure
 
 -- ============================================
+-- PARTIES TABLE (Must be created first due to foreign key)
+-- ============================================
+CREATE TABLE IF NOT EXISTS parties (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  short_name VARCHAR(50) NOT NULL,
+  slug VARCHAR(100) UNIQUE NOT NULL,
+  description TEXT,
+  
+  -- Branding
+  logo_url VARCHAR(500),
+  flag_url VARCHAR(500),
+  color VARCHAR(7), -- Hex color
+  
+  -- Parliament & Organization
+  parliament_seats INTEGER DEFAULT 0,
+  mp_count INTEGER DEFAULT 0,
+  metropolitan_mayor_count INTEGER DEFAULT 0,
+  district_mayor_count INTEGER DEFAULT 0,
+  organization_count INTEGER DEFAULT 0,
+  member_count INTEGER DEFAULT 0,
+  
+  -- Stats
+  polit_score BIGINT DEFAULT 0,
+  follower_count INTEGER DEFAULT 0,
+  post_count INTEGER DEFAULT 0,
+  
+  -- Status
+  is_active BOOLEAN DEFAULT TRUE,
+  foundation_date DATE,
+  
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_parties_slug ON parties(slug);
+CREATE INDEX IF NOT EXISTS idx_parties_parliament_seats ON parties(parliament_seats DESC);
+
+-- ============================================
 -- USERS TABLE
 -- ============================================
 CREATE TABLE IF NOT EXISTS users (
@@ -46,51 +86,11 @@ CREATE TABLE IF NOT EXISTS users (
   CONSTRAINT check_user_type CHECK (user_type IN ('politician', 'ex_politician', 'media', 'party_member', 'normal'))
 );
 
-CREATE INDEX idx_users_username ON users(username);
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_user_type ON users(user_type);
-CREATE INDEX idx_users_party_id ON users(party_id);
-CREATE INDEX idx_users_polit_score ON users(polit_score DESC);
-
--- ============================================
--- PARTIES TABLE
--- ============================================
-CREATE TABLE IF NOT EXISTS parties (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  short_name VARCHAR(50) NOT NULL,
-  slug VARCHAR(100) UNIQUE NOT NULL,
-  description TEXT,
-  
-  -- Branding
-  logo_url VARCHAR(500),
-  flag_url VARCHAR(500),
-  color VARCHAR(7), -- Hex color
-  
-  -- Parliament & Organization
-  parliament_seats INTEGER DEFAULT 0,
-  mp_count INTEGER DEFAULT 0,
-  metropolitan_mayor_count INTEGER DEFAULT 0,
-  district_mayor_count INTEGER DEFAULT 0,
-  organization_count INTEGER DEFAULT 0,
-  member_count INTEGER DEFAULT 0,
-  
-  -- Stats
-  polit_score BIGINT DEFAULT 0,
-  follower_count INTEGER DEFAULT 0,
-  post_count INTEGER DEFAULT 0,
-  
-  -- Status
-  is_active BOOLEAN DEFAULT TRUE,
-  foundation_date DATE,
-  
-  -- Timestamps
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE INDEX idx_parties_slug ON parties(slug);
-CREATE INDEX idx_parties_parliament_seats ON parties(parliament_seats DESC);
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_user_type ON users(user_type);
+CREATE INDEX IF NOT EXISTS idx_users_party_id ON users(party_id);
+CREATE INDEX IF NOT EXISTS idx_users_polit_score ON users(polit_score DESC);
 
 -- ============================================
 -- POSTS TABLE
@@ -133,17 +133,17 @@ CREATE TABLE IF NOT EXISTS posts (
   CONSTRAINT check_content_type CHECK (content_type IN ('text', 'image', 'video', 'audio'))
 );
 
-CREATE INDEX idx_posts_user_id ON posts(user_id);
-CREATE INDEX idx_posts_party_id ON posts(party_id);
-CREATE INDEX idx_posts_created_at ON posts(created_at DESC);
-CREATE INDEX idx_posts_polit_score ON posts(polit_score DESC);
-CREATE INDEX idx_posts_category ON posts(category);
-CREATE INDEX idx_posts_agenda_tag ON posts(agenda_tag);
-CREATE INDEX idx_posts_is_featured ON posts(is_featured) WHERE is_featured = TRUE;
-CREATE INDEX idx_posts_is_trending ON posts(is_trending) WHERE is_trending = TRUE;
+CREATE INDEX IF NOT EXISTS idx_posts_user_id ON posts(user_id);
+CREATE INDEX IF NOT EXISTS idx_posts_party_id ON posts(party_id);
+CREATE INDEX IF NOT EXISTS idx_posts_created_at ON posts(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_posts_polit_score ON posts(polit_score DESC);
+CREATE INDEX IF NOT EXISTS idx_posts_category ON posts(category);
+CREATE INDEX IF NOT EXISTS idx_posts_agenda_tag ON posts(agenda_tag);
+CREATE INDEX IF NOT EXISTS idx_posts_is_featured ON posts(is_featured) WHERE is_featured = TRUE;
+CREATE INDEX IF NOT EXISTS idx_posts_is_trending ON posts(is_trending) WHERE is_trending = TRUE;
 
 -- Full-text search index (Turkish)
-CREATE INDEX idx_posts_content_search ON posts USING gin(to_tsvector('turkish', content_text));
+CREATE INDEX IF NOT EXISTS idx_posts_content_search ON posts USING gin(to_tsvector('turkish', content_text));
 
 -- ============================================
 -- COMMENTS TABLE
@@ -168,10 +168,10 @@ CREATE TABLE IF NOT EXISTS comments (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE INDEX idx_comments_post_id ON comments(post_id);
-CREATE INDEX idx_comments_user_id ON comments(user_id);
-CREATE INDEX idx_comments_parent_id ON comments(parent_id);
-CREATE INDEX idx_comments_created_at ON comments(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_comments_post_id ON comments(post_id);
+CREATE INDEX IF NOT EXISTS idx_comments_user_id ON comments(user_id);
+CREATE INDEX IF NOT EXISTS idx_comments_parent_id ON comments(parent_id);
+CREATE INDEX IF NOT EXISTS idx_comments_created_at ON comments(created_at DESC);
 
 -- ============================================
 -- LIKES TABLE
@@ -195,9 +195,9 @@ CREATE TABLE IF NOT EXISTS likes (
   UNIQUE(user_id, comment_id)
 );
 
-CREATE INDEX idx_likes_post_id ON likes(post_id);
-CREATE INDEX idx_likes_comment_id ON likes(comment_id);
-CREATE INDEX idx_likes_user_id ON likes(user_id);
+CREATE INDEX IF NOT EXISTS idx_likes_post_id ON likes(post_id);
+CREATE INDEX IF NOT EXISTS idx_likes_comment_id ON likes(comment_id);
+CREATE INDEX IF NOT EXISTS idx_likes_user_id ON likes(user_id);
 
 -- ============================================
 -- FOLLOWS TABLE
@@ -216,8 +216,8 @@ CREATE TABLE IF NOT EXISTS follows (
   UNIQUE(follower_id, following_id)
 );
 
-CREATE INDEX idx_follows_follower ON follows(follower_id);
-CREATE INDEX idx_follows_following ON follows(following_id);
+CREATE INDEX IF NOT EXISTS idx_follows_follower ON follows(follower_id);
+CREATE INDEX IF NOT EXISTS idx_follows_following ON follows(following_id);
 
 -- ============================================
 -- AGENDAS TABLE
@@ -242,9 +242,9 @@ CREATE TABLE IF NOT EXISTS agendas (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE INDEX idx_agendas_slug ON agendas(slug);
-CREATE INDEX idx_agendas_trending_score ON agendas(trending_score DESC);
-CREATE INDEX idx_agendas_is_trending ON agendas(is_trending) WHERE is_trending = TRUE;
+CREATE INDEX IF NOT EXISTS idx_agendas_slug ON agendas(slug);
+CREATE INDEX IF NOT EXISTS idx_agendas_trending_score ON agendas(trending_score DESC);
+CREATE INDEX IF NOT EXISTS idx_agendas_is_trending ON agendas(is_trending) WHERE is_trending = TRUE;
 
 -- ============================================
 -- NOTIFICATIONS TABLE
@@ -267,8 +267,8 @@ CREATE TABLE IF NOT EXISTS notifications (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE INDEX idx_notifications_user_id ON notifications(user_id, is_read);
-CREATE INDEX idx_notifications_created_at ON notifications(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id, is_read);
+CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON notifications(created_at DESC);
 
 -- ============================================
 -- POLIT SCORE HISTORY TABLE
@@ -289,9 +289,9 @@ CREATE TABLE IF NOT EXISTS polit_score_history (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE INDEX idx_score_history_post_id ON polit_score_history(post_id);
-CREATE INDEX idx_score_history_actor_id ON polit_score_history(actor_id);
-CREATE INDEX idx_score_history_created_at ON polit_score_history(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_score_history_post_id ON polit_score_history(post_id);
+CREATE INDEX IF NOT EXISTS idx_score_history_actor_id ON polit_score_history(actor_id);
+CREATE INDEX IF NOT EXISTS idx_score_history_created_at ON polit_score_history(created_at DESC);
 
 -- ============================================
 -- TRENDING POSTS VIEW
@@ -337,7 +337,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_update_user_post_count
+CREATE OR REPLACE TRIGGER trigger_update_user_post_count
 AFTER INSERT OR DELETE ON posts
 FOR EACH ROW
 EXECUTE FUNCTION update_user_post_count();
@@ -351,17 +351,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_users_updated_at
+CREATE OR REPLACE TRIGGER trigger_users_updated_at
 BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER trigger_posts_updated_at
+CREATE OR REPLACE TRIGGER trigger_posts_updated_at
 BEFORE UPDATE ON posts
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER trigger_parties_updated_at
+CREATE OR REPLACE TRIGGER trigger_parties_updated_at
 BEFORE UPDATE ON parties
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();

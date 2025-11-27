@@ -44,13 +44,12 @@ async function seedParties(mockParties) {
     try {
       await sql`
         INSERT INTO parties (
-          id, name, short_name, slug, logo_url, flag_url,
+          name, short_name, slug, logo_url, flag_url,
           parliament_seats, mp_count, color, is_active
         ) VALUES (
-          ${party.party_id},
           ${party.party_name},
           ${party.party_short_name},
-          ${party.party_short_name.toLowerCase().replace(/\s+/g, '-')},
+          ${party.party_short_name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')},
           ${party.party_logo},
           ${party.party_flag || party.party_logo},
           ${party.parliament_seats},
@@ -58,14 +57,16 @@ async function seedParties(mockParties) {
           ${party.party_color},
           ${party.is_active}
         )
-        ON CONFLICT (id) DO UPDATE SET
+        ON CONFLICT (slug) DO UPDATE SET
           name = EXCLUDED.name,
           short_name = EXCLUDED.short_name,
           parliament_seats = EXCLUDED.parliament_seats,
           mp_count = EXCLUDED.mp_count
       `;
     } catch (error) {
-      console.log(`   ⚠️  ${party.party_short_name}: ${error.message}`);
+      if (!error.message.includes('duplicate')) {
+        console.log(`   ⚠️  ${party.party_short_name}: ${error.message}`);
+      }
     }
   }
 
@@ -75,16 +76,29 @@ async function seedParties(mockParties) {
 async function seedUsers(mockUsers) {
   console.log('👥 Kullanıcılar ekleniyor...');
 
+  // First, get party mapping (slug to id)
+  const parties = await sql`SELECT id, slug FROM parties`;
+  const partyMap = {};
+  parties.forEach(p => {
+    partyMap[p.slug] = p.id;
+  });
+
   let count = 0;
-  for (const user of mockUsers) {
+  for (const user of mockUsers.slice(0, 50)) { // Limit to 50 for demo
     try {
+      // Map party_id to UUID
+      let partyUuid = null;
+      if (user.party_id) {
+        const partySlug = ['ak-parti', 'chp', 'dem-parti', 'mhp', 'iyi-parti', 'yeni-yol', 'yrp', 'hurdava', 'tip', 'dbp', 'emep', 'saadet', 'dsp', 'dp', 'bagimsiz'][user.party_id - 1];
+        partyUuid = partyMap[partySlug];
+      }
+
       await sql`
         INSERT INTO users (
-          id, username, email, full_name, bio, avatar_url,
+          username, email, full_name, bio, avatar_url,
           user_type, politician_type, party_id, city_code,
           is_verified, polit_score, follower_count, following_count, post_count
         ) VALUES (
-          ${user.user_id},
           ${user.username},
           ${user.email},
           ${user.full_name},
@@ -92,7 +106,7 @@ async function seedUsers(mockUsers) {
           ${user.profile_image},
           ${user.user_type},
           ${user.politician_type || null},
-          ${user.party_id || null},
+          ${partyUuid},
           ${user.city_code || null},
           ${user.verification_badge || false},
           ${user.polit_score || 0},
@@ -100,20 +114,20 @@ async function seedUsers(mockUsers) {
           ${user.following_count || 0},
           ${user.post_count || 0}
         )
-        ON CONFLICT (id) DO UPDATE SET
+        ON CONFLICT (username) DO UPDATE SET
           full_name = EXCLUDED.full_name,
           bio = EXCLUDED.bio,
           is_verified = EXCLUDED.is_verified
       `;
       count++;
       
-      if (count % 50 === 0) {
+      if (count % 10 === 0) {
         console.log(`   ⏳ ${count} kullanıcı eklendi...`);
       }
     } catch (error) {
       // Skip duplicate errors
-      if (!error.message.includes('duplicate')) {
-        console.log(`   ⚠️  ${user.username}: ${error.message}`);
+      if (!error.message.includes('duplicate') && !error.message.includes('unique')) {
+        console.log(`   ⚠️  ${user.username}: ${error.message.split('\n')[0]}`);
       }
     }
   }

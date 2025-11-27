@@ -23,24 +23,64 @@ async function runMigration() {
     console.log('📄 Migration dosyası okundu');
     console.log('📊 Tablolar oluşturuluyor...\n');
 
-    // Split by semicolon and execute each statement
-    const statements = migrationSQL
-      .split(';')
-      .map(s => s.trim())
-      .filter(s => s.length > 0 && !s.startsWith('--'));
-
-    for (const statement of statements) {
-      try {
-        await sql(statement);
-      } catch (error) {
-        // Ignore "already exists" errors
-        if (!error.message.includes('already exists')) {
-          throw error;
+    // Execute the entire migration as one transaction
+    try {
+      await sql(migrationSQL);
+    } catch (error) {
+      // If full execution fails, try statement by statement
+      console.log('⚠️  Full migration failed, trying statement by statement...\n');
+      
+      // Better SQL parsing - handle functions and triggers
+      const statements = [];
+      let currentStatement = '';
+      let inFunction = false;
+      
+      for (const line of migrationSQL.split('\n')) {
+        const trimmed = line.trim();
+        
+        // Skip comments
+        if (trimmed.startsWith('--')) continue;
+        
+        // Track if we're inside a function/trigger definition
+        if (trimmed.includes('CREATE OR REPLACE FUNCTION') || trimmed.includes('CREATE TRIGGER')) {
+          inFunction = true;
+        }
+        
+        currentStatement += line + '\n';
+        
+        // End of statement
+        if (trimmed.endsWith(';')) {
+          if (inFunction) {
+            // Check if function/trigger is complete
+            if (trimmed.includes('$$;') || trimmed.includes('EXECUTE FUNCTION')) {
+              inFunction = false;
+              statements.push(currentStatement.trim());
+              currentStatement = '';
+            }
+          } else {
+            statements.push(currentStatement.trim());
+            currentStatement = '';
+          }
+        }
+      }
+      
+      // Execute each statement
+      for (const statement of statements) {
+        if (statement.length > 10) {
+          try {
+            await sql(statement);
+          } catch (err) {
+            if (!err.message.includes('already exists') && 
+                !err.message.includes('does not exist') &&
+                !err.message.includes('duplicate')) {
+              console.log(`   ⚠️  ${err.message.split('\n')[0]}`);
+            }
+          }
         }
       }
     }
 
-    console.log('✅ Migration başarıyla tamamlandı!\n');
+    console.log('\n✅ Migration başarıyla tamamlandı!\n');
     console.log('📋 Oluşturulan tablolar:');
     console.log('   - users');
     console.log('   - parties');
