@@ -140,7 +140,7 @@ export const HomePage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_200px] gap-4 lg:pr-0">
           {/* Sol Ana Kolon */}
           <div className="space-y-8 min-w-0">
-            {/* MOBİL: Sadece Aktif Kategori - 2'Lİ GRİD */}
+            {/* MOBİL: Sadece Aktif Kategori - TEK KOLON (X/Twitter Tarzı) */}
             <div className="md:hidden">
               {activeTab && (
                 <section className="min-w-0 rounded-lg p-2" style={{ backgroundColor: activeTab.color }}>
@@ -149,9 +149,9 @@ export const HomePage = () => {
                       {activeTab.id === 'all' ? 'TÜM İÇERİKLER' : `${activeTab.name.toUpperCase()} KONUŞUYOR`}
                     </h2>
                   </div>
-                  {/* 2'li Grid Layout - Dikey Scroll (DEMO: Her satırda max 1 metin/ses) */}
-                  <div className="grid grid-cols-2 gap-2">
-                    {filterGridTextAudio(activeTab.posts.slice(0, 20), 2, true).map(post => (
+                  {/* Tek Kolon Layout - Dikey Scroll (X/Twitter gibi) */}
+                  <div className="flex flex-col gap-3">
+                    {activeTab.posts.slice(0, 20).map(post => (
                       <PostCardHorizontal 
                         key={post.post_id} 
                         post={post}

@@ -2,6 +2,10 @@
 
 **Slogan:** "Özgür, açık, şeffaf siyaset, bağımsız medya!"
 
+## 🎯 Hedef
+
+Türkiye siyasetini demokratikleştiren, şeffaf ve açık algoritmaya sahip bir sosyal medya platformu. **1M - 30M anlık ziyaretçi** kapasitesine sahip, yüksek performanslı bir sistem.
+
 ## 🚀 Kurulum
 
 ```bash
@@ -17,6 +21,15 @@ npm run build
 # Build önizleme
 npm run preview
 ```
+
+## 📚 Dokümantasyon
+
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Sistem mimarisi ve component yapısı
+- **[FEATURES.md](FEATURES.md)** - Detaylı özellik açıklamaları
+- **[INFRASTRUCTURE.md](INFRASTRUCTURE.md)** - Altyapı ve teknoloji yığını
+- **[SCALING_STRATEGY.md](SCALING_STRATEGY.md)** - Ölçeklendirme stratejisi ve yol haritası
+- **[BACKEND_ARCHITECTURE.md](BACKEND_ARCHITECTURE.md)** - Backend API mimarisi
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Deployment rehberi
 
 ## 📦 Teknolojiler
 
