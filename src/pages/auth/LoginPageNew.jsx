@@ -63,10 +63,13 @@ export const LoginPageNew = () => {
           <h1 className="text-3xl font-black text-gray-900 mb-2">Polithane'e Hoş Geldiniz</h1>
           <p className="text-gray-600">Türkiye siyasetinin dijital meydanı</p>
           
-          {/* DEMO MODE Uyarısı */}
-          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3">
-            <p className="text-sm font-semibold text-amber-800">🚀 DEMO MODE</p>
-            <p className="text-xs text-amber-700 mt-1">Herhangi bir email/şifre ile giriş yapabilirsiniz!</p>
+          {/* Test Hesapları */}
+          <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <p className="text-sm font-semibold text-blue-800">💡 Test İçin</p>
+            <p className="text-xs text-blue-700 mt-1">
+              Herhangi bir CHP profili ile giriş yapabilirsiniz! <br/>
+              Şifre: <span className="font-mono bg-blue-100 px-1 rounded">Polithane2024</span>
+            </p>
           </div>
         </div>
 
@@ -80,19 +83,19 @@ export const LoginPageNew = () => {
               </div>
             )}
 
-            {/* Email */}
+            {/* Email/Username */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Email Adresi
+                Kullanıcı Adı veya Email
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
-                  type="email"
+                  type="text"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="demo@polithane.com"
+                  placeholder="kullanici_adi veya email@ornek.com"
                   className="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue outline-none transition-all"
                   required
                 />
