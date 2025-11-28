@@ -12,6 +12,7 @@ import { mockAgendas } from '../mock/agendas';
 import { mockUsers } from '../mock/users';
 import { currentParliamentDistribution, totalSeats } from '../data/parliamentDistribution';
 import { filterConsecutiveTextAudio, filterGridTextAudio } from '../utils/postFilters';
+import api from '../utils/api';
 
 export const HomePage = () => {
   const [posts, setPosts] = useState([]);
@@ -20,32 +21,49 @@ export const HomePage = () => {
   const [activeCategory, setActiveCategory] = useState('all'); // Mobil için aktif kategori - Default 'Tüm'
   
   useEffect(() => {
-    // Mock data loading simulation
-    try {
-      setTimeout(() => {
+    // Load data from backend API
+    const loadData = async () => {
+      try {
+        // API'den verileri çek
+        const [postsData, partiesData] = await Promise.all([
+          api.posts.getAll({ limit: 100 }).catch(() => []),
+          api.parties.getAll().catch(() => [])
+        ]);
+
+        console.log('=== API DATA LOADED ===');
+        console.log('Posts:', postsData?.length || 0);
+        console.log('Parties:', partiesData?.length || 0);
+
+        // Eğer backend'den veri gelmezse mock data kullan
+        if (postsData && postsData.length > 0) {
+          setPosts(postsData);
+        } else {
+          console.log('Using mock posts as fallback');
+          const allPosts = generateMockPosts(400, mockUsers, mockParties);
+          setPosts(allPosts);
+        }
+
+        if (partiesData && partiesData.length > 0) {
+          setParties(partiesData);
+        } else {
+          console.log('Using mock parties as fallback');
+          setParties(mockParties);
+        }
+
+        // Agendas için şimdilik mock data kullan
+        setAgendas(mockAgendas);
+
+      } catch (error) {
+        console.error('Error loading data:', error);
+        // Fallback to mock data
         const allPosts = generateMockPosts(400, mockUsers, mockParties);
-        
-        // Debug: İlk 3 postu kontrol et
-        console.log('=== LOGO DEBUG ===');
-        console.log('İlk 3 post:', allPosts.slice(0, 3).map(p => ({
-          post_id: p.post_id,
-          user_name: p.user?.full_name,
-          party_id: p.user?.party_id,
-          party_short_name: p.user?.party?.party_short_name,
-          party_logo: p.user?.party?.party_logo
-        })));
-        
         setPosts(allPosts);
         setParties(mockParties);
         setAgendas(mockAgendas);
-      }, 100);
-    } catch (error) {
-      console.error('Error loading mock data:', error);
-      // Fallback: en azından boş array'ler set et
-      setPosts([]);
-      setParties([]);
-      setAgendas([]);
-    }
+      }
+    };
+
+    loadData();
   }, []);
   
   // Kategorilere göre post filtreleme - her kategori için 30 örnek (POLİT PUANA GÖRE SIRALANMIŞ)
