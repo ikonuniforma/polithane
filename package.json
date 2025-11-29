@@ -7,7 +7,12 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "cd server && npm run dev",
+    "dev:full": "concurrently \"npm run dev\" \"npm run server\" --names \"FRONTEND,BACKEND\" --prefix-colors \"cyan,yellow\"",
+    "setup": "npm install && cd server && npm install && node scripts/migrate.js",
+    "seed": "cd server && node scripts/create-diverse-profiles.js",
+    "migrate": "cd server && node scripts/run-automated-migration.js"
   },
   "dependencies": {
     "axios": "^1.13.2",
@@ -27,6 +32,7 @@
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.1.0",
     "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

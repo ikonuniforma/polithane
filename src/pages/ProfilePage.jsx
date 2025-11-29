@@ -96,6 +96,29 @@ export const ProfilePage = () => {
               <p className="text-gray-600 mb-2 break-words">@{user.username}</p>
               {user.bio && <p className="text-gray-800 mb-4 break-words">{user.bio}</p>}
               
+              {/* Otomatik Profil Uyarısı */}
+              {user.is_automated && !isOwnProfile && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm text-blue-900 mb-2">
+                        Bu profil sistemimiz tarafından otomatik olarak oluşturulmuştur ve paylaşımlar yapay zeka tarafından yapılmaktadır.
+                      </p>
+                      <p className="text-sm text-blue-800 font-medium">
+                        Bu profil size ait mi?{' '}
+                        <a 
+                          href="https://polithane.com/register-new" 
+                          className="text-primary-blue hover:underline font-semibold"
+                        >
+                          Buraya tıklayın ve profilinizin kullanım hakkını alın →
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               {/* İstatistikler */}
               <div className="flex gap-8 mt-4">
                 <div
