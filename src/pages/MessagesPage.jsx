@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Avatar } from '../components/common/Avatar';
 import { Badge } from '../components/common/Badge';
 import { Button } from '../components/common/Button';
@@ -6,32 +6,76 @@ import { Input } from '../components/common/Input';
 import { formatTimeAgo } from '../utils/formatters';
 import { mockUsers } from '../mock/users';
 import { mockConversations, mockMessages, generateMockMessages } from '../mock/messages';
-import { Search, Send } from 'lucide-react';
+import { Search, Send, AlertCircle } from 'lucide-react';
 
 export const MessagesPage = () => {
   const [selectedConv, setSelectedConv] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const messagesEndRef = useRef(null);
   
   // Filter only regular conversations (not requests)
-  const regularConversations = mockConversations.filter(c => c.message_type === 'regular');
+  const regularConversations = mockConversations?.filter(c => c?.message_type === 'regular') || [];
   
   // Filter conversations by search query
   const filteredConversations = searchQuery
     ? regularConversations.filter(conv => {
-        const user = mockUsers.find(u => u.user_id === conv.participant_id);
-        return user?.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               conv.last_message.toLowerCase().includes(searchQuery.toLowerCase());
+        try {
+          const user = mockUsers.find(u => u?.user_id === conv?.participant_id);
+          return user?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                 conv?.last_message?.toLowerCase().includes(searchQuery.toLowerCase());
+        } catch (err) {
+          console.error('Error filtering conversation:', err);
+          return false;
+        }
       })
     : regularConversations;
+  
+  // Scroll to bottom of messages
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
   
   // Load messages when conversation is selected
   useEffect(() => {
     if (selectedConv) {
-      const conversationMessages = mockMessages[selectedConv.conversation_id] || 
-                                   generateMockMessages(selectedConv.conversation_id, 15);
-      setMessages(conversationMessages);
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Simulate async loading with a small delay
+        const timer = setTimeout(() => {
+          try {
+            const conversationMessages = mockMessages[selectedConv.conversation_id] || 
+                                         generateMockMessages(selectedConv.conversation_id, 10);
+            
+            // Validate messages
+            const validMessages = conversationMessages?.filter(msg => 
+              msg && msg.message_id && msg.message_text
+            ) || [];
+            
+            setMessages(validMessages);
+            setLoading(false);
+            
+            // Scroll to bottom after messages load
+            setTimeout(scrollToBottom, 100);
+          } catch (err) {
+            console.error('Error loading messages:', err);
+            setError('Mesajlar yüklenirken bir hata oluştu');
+            setMessages([]);
+            setLoading(false);
+          }
+        }, 100);
+        
+        return () => clearTimeout(timer);
+      } catch (err) {
+        console.error('Error in useEffect:', err);
+        setError('Bir hata oluştu');
+        setLoading(false);
+      }
     }
   }, [selectedConv]);
   
@@ -39,18 +83,26 @@ export const MessagesPage = () => {
   const handleSendMessage = () => {
     if (!newMessage.trim() || !selectedConv) return;
     
-    const newMsg = {
-      message_id: Date.now(),
-      conversation_id: selectedConv.conversation_id,
-      sender_id: 'currentUser',
-      receiver_id: selectedConv.participant_id,
-      message_text: newMessage,
-      created_at: new Date().toISOString(),
-      is_read: false
-    };
-    
-    setMessages([...messages, newMsg]);
-    setNewMessage('');
+    try {
+      const newMsg = {
+        message_id: Date.now(),
+        conversation_id: selectedConv.conversation_id,
+        sender_id: 'currentUser',
+        receiver_id: selectedConv.participant_id,
+        message_text: newMessage,
+        created_at: new Date().toISOString(),
+        is_read: false
+      };
+      
+      setMessages(prev => [...prev, newMsg]);
+      setNewMessage('');
+      
+      // Scroll to bottom after sending
+      setTimeout(scrollToBottom, 100);
+    } catch (err) {
+      console.error('Error sending message:', err);
+      setError('Mesaj gönderilemedi');
+    }
   };
   
   return (
@@ -75,49 +127,64 @@ export const MessagesPage = () => {
             </div>
             <div className="flex-1 overflow-y-auto">
               {filteredConversations.map(conv => {
-                const user = mockUsers.find(u => u.user_id === conv.participant_id);
-                if (!user) return null;
-                
-                return (
-                  <div
-                    key={conv.conversation_id}
-                    onClick={() => setSelectedConv(conv)}
-                    className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${
-                      selectedConv?.conversation_id === conv.conversation_id ? 'bg-blue-50' : ''
-                    } ${conv.unread_count > 0 ? 'bg-blue-50/30' : ''}`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <Avatar 
-                        src={user.profile_image} 
-                        size="48px"
-                        verified={user.verification_badge}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className={`font-semibold truncate ${conv.unread_count > 0 ? 'text-gray-900' : 'text-gray-700'}`}>
-                            {user.full_name}
-                          </span>
-                          <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
-                            {formatTimeAgo(conv.last_message_time)}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <p className={`text-sm truncate ${conv.unread_count > 0 ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
-                            {conv.last_message}
-                          </p>
-                          {conv.unread_count > 0 && (
-                            <Badge variant="danger" size="small" className="ml-2 flex-shrink-0">
-                              {conv.unread_count}
-                            </Badge>
+                try {
+                  if (!conv || !conv.conversation_id) return null;
+                  
+                  const user = mockUsers.find(u => u?.user_id === conv.participant_id);
+                  if (!user) return null;
+                  
+                  return (
+                    <div
+                      key={conv.conversation_id}
+                      onClick={() => {
+                        try {
+                          setSelectedConv(conv);
+                          setError(null);
+                        } catch (err) {
+                          console.error('Error selecting conversation:', err);
+                          setError('Konuşma açılamadı');
+                        }
+                      }}
+                      className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${
+                        selectedConv?.conversation_id === conv.conversation_id ? 'bg-blue-50' : ''
+                      } ${conv.unread_count > 0 ? 'bg-blue-50/30' : ''}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Avatar 
+                          src={user.profile_image} 
+                          size="48px"
+                          verified={user.verification_badge}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className={`font-semibold truncate ${conv.unread_count > 0 ? 'text-gray-900' : 'text-gray-700'}`}>
+                              {user.full_name || 'Bilinmeyen Kullanıcı'}
+                            </span>
+                            <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
+                              {conv.last_message_time ? formatTimeAgo(conv.last_message_time) : ''}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <p className={`text-sm truncate ${conv.unread_count > 0 ? 'font-semibold text-gray-900' : 'text-gray-600'}`}>
+                              {conv.last_message || 'Mesaj yok'}
+                            </p>
+                            {conv.unread_count > 0 && (
+                              <Badge variant="danger" size="small" className="ml-2 flex-shrink-0">
+                                {conv.unread_count}
+                              </Badge>
+                            )}
+                          </div>
+                          {conv.is_muted && (
+                            <span className="text-xs text-gray-400 mt-1">🔇 Sessize alındı</span>
                           )}
                         </div>
-                        {conv.is_muted && (
-                          <span className="text-xs text-gray-400 mt-1">🔇 Sessize alındı</span>
-                        )}
                       </div>
                     </div>
-                  </div>
-                );
+                  );
+                } catch (err) {
+                  console.error('Error rendering conversation:', err);
+                  return null;
+                }
               })}
               {filteredConversations.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full p-8 text-center">
@@ -154,45 +221,75 @@ export const MessagesPage = () => {
                 
                 {/* Messages Area */}
                 <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-                  <div className="space-y-3">
-                    {messages.map((message) => {
-                      const isFromMe = message.sender_id === 'currentUser';
-                      const user = isFromMe ? null : mockUsers.find(u => u.user_id === selectedConv.participant_id);
-                      
-                      return (
-                        <div
-                          key={message.message_id}
-                          className={`flex ${isFromMe ? 'justify-end' : 'justify-start'}`}
-                        >
-                          {!isFromMe && (
-                            <Avatar 
-                              src={user?.profile_image} 
-                              size="28px"
-                              className="mr-2 flex-shrink-0"
-                            />
-                          )}
+                  {error && (
+                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+                      <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                      <span className="text-sm">{error}</span>
+                      <button 
+                        onClick={() => setError(null)}
+                        className="ml-auto text-red-500 hover:text-red-700"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+                  
+                  {loading ? (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-blue mx-auto mb-3"></div>
+                        <p className="text-gray-500">Mesajlar yükleniyor...</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {messages.map((message) => {
+                        try {
+                          if (!message || !message.message_id) return null;
                           
-                          <div className={`max-w-[70%] ${isFromMe ? 'items-end' : 'items-start'} flex flex-col`}>
+                          const isFromMe = message.sender_id === 'currentUser';
+                          const user = isFromMe ? null : mockUsers.find(u => u?.user_id === selectedConv?.participant_id);
+                          
+                          return (
                             <div
-                              className={`rounded-2xl px-4 py-2 ${
-                                isFromMe
-                                  ? 'bg-primary-blue text-white rounded-br-sm'
-                                  : 'bg-white text-gray-900 rounded-bl-sm border border-gray-200'
-                              }`}
+                              key={message.message_id}
+                              className={`flex ${isFromMe ? 'justify-end' : 'justify-start'}`}
                             >
-                              <p className="text-sm break-words">{message.message_text}</p>
+                              {!isFromMe && (
+                                <Avatar 
+                                  src={user?.profile_image} 
+                                  size="28px"
+                                  className="mr-2 flex-shrink-0"
+                                />
+                              )}
+                              
+                              <div className={`max-w-[70%] ${isFromMe ? 'items-end' : 'items-start'} flex flex-col`}>
+                                <div
+                                  className={`rounded-2xl px-4 py-2 ${
+                                    isFromMe
+                                      ? 'bg-primary-blue text-white rounded-br-sm'
+                                      : 'bg-white text-gray-900 rounded-bl-sm border border-gray-200'
+                                  }`}
+                                >
+                                  <p className="text-sm break-words">{message.message_text || ''}</p>
+                                </div>
+                                
+                                <div className="flex items-center gap-1 mt-1 px-1">
+                                  <span className="text-xs text-gray-400">
+                                    {message.created_at ? formatTimeAgo(message.created_at) : ''}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                            
-                            <div className="flex items-center gap-1 mt-1 px-1">
-                              <span className="text-xs text-gray-400">
-                                {formatTimeAgo(message.created_at)}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                          );
+                        } catch (err) {
+                          console.error('Error rendering message:', err);
+                          return null;
+                        }
+                      })}
+                      <div ref={messagesEndRef} />
+                    </div>
+                  )}
                 </div>
                 
                 {/* Message Input */}

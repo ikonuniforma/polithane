@@ -156,35 +156,43 @@ export const mockMessages = {
 };
 
 // Mesaj üret
-export const generateMockMessages = (conversationId, count = 20) => {
-  const messages = [];
-  const sampleTexts = [
-    'Merhaba!',
-    'Nasılsınız?',
-    'Yarınki toplantı için hazır mısınız?',
-    'Teşekkür ederim.',
-    'Anlaştık, görüşmek üzere.',
-    'Bilgilendirme için sağolun.',
-    'Güzel bir paylaşım olmuş.',
-    'Fikrinizi merak ediyorum.',
-    'Proje hakkında konuşabilir miyiz?',
-    'İyi çalışmalar dilerim.'
-  ];
-  
-  for (let i = 0; i < count; i++) {
-    const isFromMe = i % 2 === 0;
-    messages.push({
-      message_id: conversationId * 1000 + i,
-      conversation_id: conversationId,
-      sender_id: isFromMe ? 'currentUser' : conversationId,
-      receiver_id: isFromMe ? conversationId : 'currentUser',
-      message_text: sampleTexts[Math.floor(Math.random() * sampleTexts.length)],
-      created_at: new Date(Date.now() - (count - i) * 60 * 60 * 1000).toISOString(),
-      is_read: i < count - 3
-    });
+export const generateMockMessages = (conversationId, count = 10) => {
+  try {
+    // Maksimum 50 mesaj ile sınırla (performans için)
+    const safeCount = Math.min(Math.max(1, count), 50);
+    
+    const messages = [];
+    const sampleTexts = [
+      'Merhaba!',
+      'Nasılsınız?',
+      'Yarınki toplantı için hazır mısınız?',
+      'Teşekkür ederim.',
+      'Anlaştık, görüşmek üzere.',
+      'Bilgilendirme için sağolun.',
+      'Güzel bir paylaşım olmuş.',
+      'Fikrinizi merak ediyorum.',
+      'Proje hakkında konuşabilir miyiz?',
+      'İyi çalışmalar dilerim.'
+    ];
+    
+    for (let i = 0; i < safeCount; i++) {
+      const isFromMe = i % 2 === 0;
+      messages.push({
+        message_id: conversationId * 1000 + i,
+        conversation_id: conversationId,
+        sender_id: isFromMe ? 'currentUser' : conversationId,
+        receiver_id: isFromMe ? conversationId : 'currentUser',
+        message_text: sampleTexts[Math.floor(Math.random() * sampleTexts.length)],
+        created_at: new Date(Date.now() - (safeCount - i) * 60 * 60 * 1000).toISOString(),
+        is_read: i < safeCount - 3
+      });
+    }
+    
+    return messages;
+  } catch (error) {
+    console.error('Error generating mock messages:', error);
+    return [];
   }
-  
-  return messages;
 };
 
 // Kullanıcı mesaj ayarları

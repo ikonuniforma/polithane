@@ -35,27 +35,38 @@ export const formatDate = (date) => {
 
 // Zaman öncesi (time ago)
 export const formatTimeAgo = (date) => {
-  if (!date) return '';
-  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-  
-  const intervals = {
-    yıl: 31536000,
-    ay: 2592000,
-    hafta: 604800,
-    gün: 86400,
-    saat: 3600,
-    dakika: 60,
-    saniye: 1
-  };
-  
-  for (const [unit, secondsInUnit] of Object.entries(intervals)) {
-    const interval = Math.floor(seconds / secondsInUnit);
-    if (interval >= 1) {
-      return `${interval} ${unit} önce`;
+  try {
+    if (!date) return '';
+    
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) return '';
+    
+    const seconds = Math.floor((new Date() - dateObj) / 1000);
+    
+    if (seconds < 0) return 'Az önce'; // Gelecek tarih
+    
+    const intervals = {
+      yıl: 31536000,
+      ay: 2592000,
+      hafta: 604800,
+      gün: 86400,
+      saat: 3600,
+      dakika: 60,
+      saniye: 1
+    };
+    
+    for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+      const interval = Math.floor(seconds / secondsInUnit);
+      if (interval >= 1) {
+        return `${interval} ${unit} önce`;
+      }
     }
+    
+    return 'Az önce';
+  } catch (error) {
+    console.error('formatTimeAgo error:', error);
+    return '';
   }
-  
-  return 'Az önce';
 };
 
 // Süre formatlama (saniye -> mm:ss)
