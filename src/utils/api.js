@@ -17,7 +17,7 @@ const ERROR_MESSAGES = {
 };
 
 // Helper function for API calls
-const apiCall = async (endpoint, options = {}) => {
+export const apiCall = async (endpoint, options = {}) => {
   const url = `${API_URL}${endpoint}`;
   const headers = {
     ...getAuthHeader(),
