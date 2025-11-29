@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, Globe, Mail, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+import { apiCall } from '../../utils/api';
 
 export const SiteSettings = () => {
   const [settings, setSettings] = useState({
@@ -13,12 +14,12 @@ export const SiteSettings = () => {
     allowComments: true,
     allowMessages: true,
     // Email ayarları
-    emailVerificationEnabled: false,
-    emailServiceProvider: 'gmail',
-    emailFromAddress: 'noreply@polithane.com',
-    emailFromName: 'Polithane',
-    emailSmtpUser: '',
-    emailSmtpPassword: '',
+    email_verification_enabled: 'false',
+    email_service_provider: 'gmail',
+    email_from_address: 'noreply@polithane.com',
+    email_from_name: 'Polithane',
+    email_smtp_user: '',
+    email_smtp_password: '',
     socialLinks: {
       twitter: 'https://twitter.com/polithane',
       facebook: 'https://facebook.com/polithane',
@@ -26,6 +27,31 @@ export const SiteSettings = () => {
       youtube: 'https://youtube.com/@polithane',
     }
   });
+
+  const [loading, setLoading] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+
+  // Load settings from API
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const response = await apiCall('/api/settings', {
+          method: 'GET',
+        });
+        
+        if (response.success) {
+          setSettings(prev => ({
+            ...prev,
+            ...response.data
+          }));
+        }
+      } catch (error) {
+        console.error('Settings yüklenemedi:', error);
+      }
+    };
+    
+    loadSettings();
+  }, []);
 
   const handleChange = (field, value) => {
     setSettings(prev => ({ ...prev, [field]: value }));
@@ -38,9 +64,34 @@ export const SiteSettings = () => {
     }));
   };
 
-  const handleSave = () => {
-    // TODO: Save to API
-    alert('Ayarlar kaydedildi!');
+  const handleSave = async () => {
+    setLoading(true);
+    setSaveMessage('');
+    
+    try {
+      const response = await apiCall('/api/settings', {
+        method: 'PUT',
+        body: JSON.stringify({
+          email_verification_enabled: settings.email_verification_enabled,
+          email_service_provider: settings.email_service_provider,
+          email_from_address: settings.email_from_address,
+          email_from_name: settings.email_from_name,
+          email_smtp_user: settings.email_smtp_user,
+          email_smtp_password: settings.email_smtp_password,
+        })
+      });
+      
+      if (response.success) {
+        setSaveMessage('✅ Ayarlar başarıyla kaydedildi!');
+        setTimeout(() => setSaveMessage(''), 3000);
+      } else {
+        setSaveMessage('❌ ' + (response.error || 'Kaydetme başarısız'));
+      }
+    } catch (error) {
+      setSaveMessage('❌ ' + (error.message || 'Bir hata oluştu'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,10 +102,21 @@ export const SiteSettings = () => {
           <p className="text-gray-600">Genel platform ayarları</p>
         </div>
         
-        <button onClick={handleSave} className="px-6 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-600 flex items-center gap-2">
-          <Save className="w-4 h-4" />
-          Kaydet
-        </button>
+        <div className="flex items-center gap-3">
+          {saveMessage && (
+            <span className={`text-sm font-medium ${saveMessage.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
+              {saveMessage}
+            </span>
+          )}
+          <button 
+            onClick={handleSave} 
+            disabled={loading}
+            className="px-6 py-2 bg-primary-blue text-white rounded-lg hover:bg-blue-600 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Save className="w-4 h-4" />
+            {loading ? 'Kaydediliyor...' : 'Kaydet'}
+          </button>
+        </div>
       </div>
       
       <div className="space-y-6">
@@ -75,8 +137,8 @@ export const SiteSettings = () => {
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={settings.emailVerificationEnabled}
-                  onChange={(e) => handleChange('emailVerificationEnabled', e.target.checked)}
+                  checked={settings.email_verification_enabled === 'true'}
+                  onChange={(e) => handleChange('email_verification_enabled', e.target.checked ? 'true' : 'false')}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-blue"></div>
@@ -84,7 +146,7 @@ export const SiteSettings = () => {
             </div>
 
             {/* Email Ayarları (sadece email doğrulama açıksa göster) */}
-            {settings.emailVerificationEnabled && (
+            {settings.email_verification_enabled === 'true' && (
               <div className="border-t pt-4 space-y-4">
                 <p className="text-sm font-semibold text-gray-700">Email Servisi Yapılandırması</p>
                 
@@ -92,8 +154,8 @@ export const SiteSettings = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2">Email Servis Sağlayıcısı</label>
                   <select
-                    value={settings.emailServiceProvider}
-                    onChange={(e) => handleChange('emailServiceProvider', e.target.value)}
+                    value={settings.email_service_provider}
+                    onChange={(e) => handleChange('email_service_provider', e.target.value)}
                     className="w-full px-4 py-2 border rounded-lg"
                   >
                     <option value="gmail">Gmail</option>
@@ -103,14 +165,14 @@ export const SiteSettings = () => {
                 </div>
 
                 {/* Gmail ayarları */}
-                {settings.emailServiceProvider === 'gmail' && (
+                {settings.email_service_provider === 'gmail' && (
                   <>
                     <div>
                       <label className="block text-sm font-medium mb-2">Gmail Adresi</label>
                       <input
                         type="email"
-                        value={settings.emailSmtpUser}
-                        onChange={(e) => handleChange('emailSmtpUser', e.target.value)}
+                        value={settings.email_smtp_user}
+                        onChange={(e) => handleChange('email_smtp_user', e.target.value)}
                         className="w-full px-4 py-2 border rounded-lg"
                         placeholder="sizin-gmail@gmail.com"
                       />
@@ -120,8 +182,8 @@ export const SiteSettings = () => {
                       <label className="block text-sm font-medium mb-2">Gmail App Password</label>
                       <input
                         type="password"
-                        value={settings.emailSmtpPassword}
-                        onChange={(e) => handleChange('emailSmtpPassword', e.target.value)}
+                        value={settings.email_smtp_password}
+                        onChange={(e) => handleChange('email_smtp_password', e.target.value)}
                         className="w-full px-4 py-2 border rounded-lg"
                         placeholder="abcd efgh ijkl mnop"
                       />
