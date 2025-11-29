@@ -2,7 +2,8 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import { sql } from '../index.js';
 import { generateToken, authenticateToken } from '../middleware/auth.js';
-import { generateVerificationToken, sendVerificationEmail, sendWelcomeEmail } from '../utils/emailService.js';
+// Email servisi şimdilik devre dışı (yapılandırılmamış)
+// import { generateVerificationToken, sendVerificationEmail, sendWelcomeEmail } from '../utils/emailService.js';
 
 const router = express.Router();
 
@@ -82,6 +83,12 @@ router.post('/register', async (req, res) => {
     // Şifreyi hashle
     const password_hash = await bcrypt.hash(password, 10);
 
+    // Email doğrulama sistemi (şimdilik devre dışı - email servisi yapılandırılmamış)
+    // Tüm yeni kullanıcılar otomatik verified
+    const emailVerified = true;
+    const verificationToken = null;
+    const tokenExpires = null;
+
     // Kullanıcıyı oluştur
     const [user] = await sql`
       INSERT INTO users (
@@ -92,7 +99,10 @@ router.post('/register', async (req, res) => {
         user_type,
         province,
         party_id,
-        is_verified
+        email_verified,
+        verification_token,
+        verification_token_expires,
+        verified_at
       )
       VALUES (
         ${username},
@@ -102,9 +112,12 @@ router.post('/register', async (req, res) => {
         ${user_type},
         ${province || null},
         ${party_id || null},
-        ${false}
+        ${emailVerified},
+        ${verificationToken},
+        ${tokenExpires},
+        ${emailVerified ? new Date() : null}
       )
-      RETURNING id, username, email, full_name, user_type, avatar_url, is_verified, created_at
+      RETURNING id, username, email, full_name, user_type, avatar_url, email_verified, created_at
     `;
 
     // JWT token oluştur
@@ -112,7 +125,7 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Kayıt başarılı!',
+      message: 'Kayıt başarılı! Hesabınız oluşturuldu.',
       data: {
         user,
         token
