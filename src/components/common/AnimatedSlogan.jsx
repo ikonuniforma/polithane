@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const AnimatedSlogan = () => {
+  const navigate = useNavigate();
   const fullSlogan = 'Özgür, açık, şeffaf siyaset, bağımsız medya.';
   // Virgül ve noktayı koruyarak kelimelere ayır
   const words = ['Özgür,', 'açık,', 'şeffaf', 'siyaset,', 'bağımsız', 'medya.'];
@@ -64,18 +66,24 @@ export const AnimatedSlogan = () => {
 
   return (
     <div className="flex items-center gap-3 flex-wrap">
-      {/* Logo */}
+      {/* Logo - Tıklanabilir */}
       <img 
         src="/logo.png" 
         alt="Polithane Logo" 
-        className="h-10 w-auto object-contain"
+        className="h-10 w-auto object-contain cursor-pointer hover:opacity-80 transition-opacity"
+        onClick={() => navigate('/')}
         onError={(e) => {
           // Fallback to text if logo not found
           e.target.style.display = 'none';
           e.target.nextSibling.style.display = 'inline';
         }}
       />
-      <span className="text-primary-blue font-bold text-xl whitespace-nowrap hidden">Polithane</span>
+      <span 
+        className="text-primary-blue font-bold text-xl whitespace-nowrap hidden cursor-pointer hover:opacity-80 transition-opacity"
+        onClick={() => navigate('/')}
+      >
+        Polithane
+      </span>
       
       <span className="text-gray-600 text-sm md:text-base min-h-[1.25rem] flex items-center">
         <span

@@ -231,8 +231,23 @@ export const RegisterPageNew = () => {
       <div className="w-full max-w-4xl">
         {/* Logo & Title */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-blue rounded-2xl mb-4 shadow-lg">
-            <span className="text-3xl font-black text-white">P</span>
+          <div 
+            className="inline-flex items-center justify-center mb-4 cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigate('/')}
+          >
+            <img 
+              src="/ikon.png" 
+              alt="Polithane" 
+              className="w-20 h-20 object-contain drop-shadow-lg"
+              onError={(e) => {
+                // Fallback to default icon if not found
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div className="hidden items-center justify-center w-20 h-20 bg-primary-blue rounded-2xl shadow-lg">
+              <span className="text-4xl font-black text-white">P</span>
+            </div>
           </div>
           <h1 className="text-3xl font-black text-gray-900 mb-2">Polithane'e Hoş Geldiniz</h1>
           <p className="text-gray-600">Türkiye siyasetinin dijital meydanı</p>

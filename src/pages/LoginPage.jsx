@@ -26,7 +26,21 @@ export const LoginPage = () => {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary-blue mb-2">POLITHANE</h1>
+          <div 
+            className="inline-flex items-center justify-center mb-4 cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigate('/')}
+          >
+            <img 
+              src="/ikon.png" 
+              alt="Polithane" 
+              className="w-20 h-20 object-contain drop-shadow-lg"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'block';
+              }}
+            />
+            <h1 className="text-4xl font-bold text-primary-blue mb-2 hidden">POLITHANE</h1>
+          </div>
           <p className="text-gray-600">Giriş yapın</p>
         </div>
         
