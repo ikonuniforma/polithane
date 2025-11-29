@@ -2,13 +2,13 @@ import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
 // Email transporter configuration
-const createTransporter = () => {
-  // Gmail SMTP configuration (production'da değiştirilmeli)
+const createTransporter = (emailConfig) => {
+  // Gmail SMTP configuration
   return nodemailer.createTransporter({
-    service: 'gmail',
+    service: emailConfig.provider || 'gmail',
     auth: {
-      user: process.env.EMAIL_USER || 'noreply@polithane.com',
-      pass: process.env.EMAIL_PASSWORD || 'your-app-password'
+      user: emailConfig.smtpUser,
+      pass: emailConfig.smtpPassword
     }
   });
 };
@@ -19,8 +19,8 @@ export const generateVerificationToken = () => {
 };
 
 // Send verification email
-export const sendVerificationEmail = async (email, username, token) => {
-  const transporter = createTransporter();
+export const sendVerificationEmail = async (email, username, token, emailConfig) => {
+  const transporter = createTransporter(emailConfig);
   
   const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email?token=${token}`;
   

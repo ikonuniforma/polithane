@@ -2,8 +2,8 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import { sql } from '../index.js';
 import { generateToken, authenticateToken } from '../middleware/auth.js';
-// Email servisi şimdilik devre dışı (yapılandırılmamış)
-// import { generateVerificationToken, sendVerificationEmail, sendWelcomeEmail } from '../utils/emailService.js';
+import { isEmailVerificationEnabled, getEmailConfig } from '../utils/settingsService.js';
+import { generateVerificationToken, sendVerificationEmail } from '../utils/emailService.js';
 
 const router = express.Router();
 
@@ -83,11 +83,18 @@ router.post('/register', async (req, res) => {
     // Şifreyi hashle
     const password_hash = await bcrypt.hash(password, 10);
 
-    // Email doğrulama sistemi (şimdilik devre dışı - email servisi yapılandırılmamış)
-    // Tüm yeni kullanıcılar otomatik verified
-    const emailVerified = true;
-    const verificationToken = null;
-    const tokenExpires = null;
+    // Email doğrulama sistemi kontrolü (admin panelinden açılıp kapanabilir)
+    const emailVerificationEnabled = await isEmailVerificationEnabled();
+    
+    let emailVerified = !emailVerificationEnabled; // Kapalıysa otomatik verified
+    let verificationToken = null;
+    let tokenExpires = null;
+
+    // Email doğrulama açıksa token oluştur
+    if (emailVerificationEnabled) {
+      verificationToken = generateVerificationToken();
+      tokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 saat
+    }
 
     // Kullanıcıyı oluştur
     const [user] = await sql`
@@ -120,15 +127,34 @@ router.post('/register', async (req, res) => {
       RETURNING id, username, email, full_name, user_type, avatar_url, email_verified, created_at
     `;
 
+    // Email doğrulama açıksa email gönder
+    if (emailVerificationEnabled && verificationToken) {
+      try {
+        const emailConfig = await getEmailConfig();
+        if (emailConfig.smtpUser && emailConfig.smtpPassword) {
+          await sendVerificationEmail(email, username, verificationToken, emailConfig);
+          console.log(`✅ Verification email sent to ${email}`);
+        } else {
+          console.warn('⚠️ Email verification enabled but SMTP not configured');
+        }
+      } catch (emailError) {
+        console.error('⚠️ Email send failed:', emailError);
+        // Email hatası kullanıcıyı engellemesin
+      }
+    }
+
     // JWT token oluştur
     const token = generateToken(user);
 
     res.status(201).json({
       success: true,
-      message: 'Kayıt başarılı! Hesabınız oluşturuldu.',
+      message: emailVerificationEnabled 
+        ? 'Kayıt başarılı! Lütfen email adresinizi doğrulayın.' 
+        : 'Kayıt başarılı! Hesabınız oluşturuldu.',
       data: {
         user,
-        token
+        token,
+        requiresVerification: emailVerificationEnabled && !emailVerified
       }
     });
 

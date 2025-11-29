@@ -12,6 +12,13 @@ export const SiteSettings = () => {
     allowRegistration: true,
     allowComments: true,
     allowMessages: true,
+    // Email ayarları
+    emailVerificationEnabled: false,
+    emailServiceProvider: 'gmail',
+    emailFromAddress: 'noreply@polithane.com',
+    emailFromName: 'Polithane',
+    emailSmtpUser: '',
+    emailSmtpPassword: '',
     socialLinks: {
       twitter: 'https://twitter.com/polithane',
       facebook: 'https://facebook.com/polithane',
